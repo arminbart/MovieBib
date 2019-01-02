@@ -13,6 +13,9 @@ class Connection
 		$pwd    = $this->get_php_param("pwd");
 		$db     = $this->get_php_param("db");
 
+		if (starts_with($pwd, "**"))
+			exit("Database pwd starts with '**'. Please provide correct password!");
+
 		$this->sqli = new mysqli($host, $user, $pwd, $db);
 
 		if ($this->sqli->connect_errno)
