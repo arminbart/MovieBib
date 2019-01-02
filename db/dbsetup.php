@@ -87,7 +87,7 @@ function create_table($con, $file, $table, $maxretries)
 		$stmt .= trim($line) . " ";
 		if ($line == ")")
 		{
-			db_execute($con, $stmt);
+			$con->execute($stmt);
 			debug_out("Table " . $table . " created.");
 			break;
 		}
@@ -115,7 +115,7 @@ function update_table($con, $file, $table, $maxretries)
 
 		if (!column_exists($con, $table, $col))
 		{
-			db_execute($con, "ALTER TABLE " . $table . " ADD COLUMN " . $line);
+			$con->execute("ALTER TABLE " . $table . " ADD COLUMN " . $line);
 			debug_out("Added column " . $col . " to table " . $table . ".");
 		}
 	}
