@@ -92,6 +92,21 @@ class Connection
 
 		return $this->sqli->use_result();
 	}
+
+	// Executes SQL query and returns single value
+	function value($stmt)
+	{
+		$result = $this->query($stmt);
+
+		if ($result !== null)
+		{
+			$row = $result->fetch_row();
+			if ($row !== null)
+				return $row[0];
+		}
+
+		return null;
+	}
 }
 
 ?>
