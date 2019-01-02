@@ -1,0 +1,4 @@
+host=localhost
+user=web391
+pwd=********
+db=usr_web391_1

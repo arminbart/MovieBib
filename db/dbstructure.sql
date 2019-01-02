@@ -1,0 +1,21 @@
+
+CREATE TABLE Genres (
+	ID VARCHAR(16) PRIMARY KEY,
+	Name TEXT NOT NULL
+)
+
+CREATE TABLE Videos (
+	ID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	Title TEXT,
+	OrigTitle TEXT,
+	Enlisted TIMESTAMP,
+	Genre VARCHAR(16),
+	Lang CHAR(2),
+	Year INT(4),
+	Medium VARCHAR(16),
+	Resolution VARCHAR(16),
+	Location TEXT,
+	Info TEXT,
+	Watched TIMESTAMP,
+	WatchCnt INT
+)
