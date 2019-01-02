@@ -65,7 +65,7 @@ class Connection
 	// Executes SQL statement without result
 	function execute($stmt)
 	{
-		debug_out("SQL statement: " . $stmt);
+		debug_out("SQL statement: " . $stmt, false);
 
 		if (!$this->sqli->query($stmt))
 			exit("Executing SQL statement failed: " . $stmt);
@@ -74,7 +74,7 @@ class Connection
 	// Executes SQL statement and returns true, if successfull
 	function verify($stmt)
 	{
-		debug_out("SQL statement: " . $stmt);
+		debug_out("SQL statement: " . $stmt, false);
 
 		if ($this->sqli->query($stmt))
 			return true;
@@ -85,7 +85,7 @@ class Connection
 	// Executes SQL query and returns mysqli_result
 	function query($stmt)
 	{
-		debug_out("SQL query: " . $stmt);
+		debug_out("SQL query: " . $stmt, false);
 
 		if (!$this->sqli->real_query($stmt))
 			exit("Executing SQL query failed: " . $stmt);
