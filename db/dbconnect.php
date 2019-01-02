@@ -8,10 +8,10 @@ class Connection
 
 	function __construct()
 	{
-		$host   = $this->get_php_param("host");
-		$user   = $this->get_php_param("user");
-		$pwd    = $this->get_php_param("pwd");
-		$db     = $this->get_php_param("db");
+		$host = get_php_param("db/dbparams.txt", "host");
+		$user = get_php_param("db/dbparams.txt", "user");
+		$pwd  = get_php_param("db/dbparams.txt", "pwd");
+		$db   = get_php_param("db/dbparams.txt", "db");
 
 		if (starts_with($pwd, "**"))
 			exit("Database pwd starts with '**'. Please provide correct password!");
@@ -38,31 +38,6 @@ class Connection
 			$this->sqli = null;
 			debug_out("Closed MySQL connection.");
 		}
-	}
-
-	function get_php_param($name)
-	{
-		$maxretries = 100;
-		$value = trim($_GET[$name]);
-
-		if ($value == "")
-		{
-			$file = fopen("db/dbparams.txt", "r");
-
-			while ($value == "" and $maxretries > 0 and !feof($file))
-			{
-				$maxretries = $maxretries - 1;
-				$line = fgets($file);
-
-				$values = explode("=", $line);
-				if (trim($values[0]) === $name)
-					$value = trim($values[1]);
-			}
-
-			fclose($file);
-		}
-
-		return $value;
 	}
 
 	// Executes SQL statement without result
