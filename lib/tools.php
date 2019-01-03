@@ -23,6 +23,14 @@ function ends_with($haystack, $needle)
     return (substr($haystack, -strlen($needle)) === $needle);
 }
 
+function strpos_regex($string, $regex)
+{
+	if (preg_match($regex, $string, $matches))
+		return strpos($string, $matches[0]);
+	else
+		return false;
+}
+
 function get_php_param($paramfile, $name)
 {
 	$maxretries = 100;
