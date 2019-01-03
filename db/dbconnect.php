@@ -85,6 +85,33 @@ class Connection
 
 		return null;
 	}
+
+	function table_exists($table)
+	{
+		if ($this->verify("SELECT count(*) FROM " . $table . " WHERE 0"))
+			return true;
+
+		debug_out("Table " . $table . " does not exist.");
+		return false;
+	}
+
+	function column_exists($table, $col)
+	{
+		if ($this->verify("SELECT " . $col . " FROM " . $table . " LIMIT 1"))
+			return true;
+
+		debug_out("Column " . $table . "." . $col . " does not exist.");
+		return false;
+	}
+
+	function entry_exists($table, $col, $val)
+	{
+		if ($this->value("SELECT count(*) FROM " . $table . " WHERE " . $col . " = '" . $val . "'"))
+			return true;
+
+		debug_out("Entry '" . $val . "' in table " . $table . " not found.");
+		return false;
+	}
 }
 
 ?>

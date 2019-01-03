@@ -39,37 +39,10 @@ function check_table($con, $file, $header, $maxretries)
 
 	$table = $values[2];
 
-	if (!table_exists($con, $table))
+	if (!$con->table_exists($table))
 		create_table($con, $file, $table, $maxretries);
 	else
 		update_table($con, $file, $table, $maxretries);
-}
-
-function table_exists($con, $table)
-{
-	if ($con->verify("SELECT count(*) FROM " . $table . " WHERE 0"))
-		return true;
-
-	debug_out("Table " . $table . " does not exist.");
-	return false;
-}
-
-function column_exists($con, $table, $col)
-{
-	if ($con->verify("SELECT " . $col . " FROM " . $table . " LIMIT 1"))
-		return true;
-
-	debug_out("Column " . $table . "." . $col . " does not exist.");
-	return false;
-}
-
-function entry_exists($con, $table, $col, $val)
-{
-	if ($con->value("SELECT count(*) FROM " . $table . " WHERE " . $col . " = '" . $val . "'"))
-		return true;
-
-	debug_out("Entry '" . $val . "' in table " . $table . " not found.");
-	return false;
 }
 
 function create_table($con, $file, $table, $maxretries)
@@ -113,7 +86,7 @@ function update_table($con, $file, $table, $maxretries)
 
 		$col = explode(" ", $line)[0];
 
-		if (!column_exists($con, $table, $col))
+		if (!$con->column_exists($table, $col))
 		{
 			$con->execute("ALTER TABLE " . $table . " ADD COLUMN " . $line);
 			debug_out("Added column " . $col . " to table " . $table . ".");
@@ -151,7 +124,7 @@ function check_entry($con, $line)
 	$col = trim(explode(",", trim(substr($values[0], strlen($table) + 1), " ()"))[0]);
 	$val = trim(explode(",", trim($values[1], " ()"))[0], " '");
 
-	if (!entry_exists($con, $table, $col, $val))
+	if (!$con->entry_exists($table, $col, $val))
 	{
 		$con->execute($line);
 		debug_out("Inserted value '" . $val. "' in table " . $table . ".");
