@@ -1,8 +1,13 @@
 <?php
 
+function debug()
+{
+	return get_php_param("debug") == "true";
+}
+
 function debug_out($msg, $important = true)
 {
-	if (get_php_param("debug") != "true")
+	if (!debug())
 		return;
 
 	if ($important)
