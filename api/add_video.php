@@ -87,7 +87,7 @@ function extract_resolution($filename)
 
 function extract_type($filename)
 {
-	$types = explode(",", get_php_param("api/apiparams.txt", "types"));
+	$types = explode(",", get_php_param("types"));
 	$pos = strrpos($filename, ".");
 
 	if ($pos > 0)

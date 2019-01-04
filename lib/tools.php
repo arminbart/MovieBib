@@ -1,16 +1,16 @@
 <?php
 
-$DEBUG = true;
-
 function debug_out($msg, $important = true)
 {
+	if (get_php_param("debug") != "true")
+		return;
+
 	if ($important)
 		echo "<p style='color: #606060; font-size: 14'>";
 	else
 		echo "<p style='color: #A0A0A0; font-size: 10'>";
 
-    if ($GLOBALS['DEBUG'] === true)
-        echo $msg . "</p>";
+	echo $msg . "</p>";
 }
 
 function starts_with($haystack, $needle)
@@ -31,7 +31,7 @@ function strpos_regex($string, $regex)
 		return false;
 }
 
-function get_php_param($paramfile, $name)
+function get_php_param($name, $paramfile = "lib/params.txt")
 {
 	$maxretries = 100;
 	$value = get_http_param($name);

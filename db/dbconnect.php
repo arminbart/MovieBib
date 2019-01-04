@@ -8,10 +8,10 @@ class Connection
 
 	function __construct()
 	{
-		$host = get_php_param("db/dbparams.txt", "host");
-		$user = get_php_param("db/dbparams.txt", "user");
-		$pwd  = get_php_param("db/dbparams.txt", "pwd");
-		$db   = get_php_param("db/dbparams.txt", "db");
+		$host = get_php_param("host", "db/dbparams.txt");
+		$user = get_php_param("user", "db/dbparams.txt");
+		$pwd  = get_php_param("pwd", "db/dbparams.txt");
+		$db   = get_php_param("db", "db/dbparams.txt");
 
 		if (starts_with($pwd, "**"))
 			exit("Database pwd starts with '**'. Please provide correct password!");
