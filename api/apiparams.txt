@@ -1,0 +1,1 @@
+types=AVI,MP4
