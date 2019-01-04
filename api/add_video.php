@@ -107,6 +107,8 @@ function extract_genre($con, $location)
 		$genre = substr($location, $pos + 1);
 		if (genre_exists($con, $genre))
 			return $con->value("SELECT ID FROM Genres WHERE ID = '" . $genre . "'"); // Fetch Genre in correct upper-lower-case
+		else if ($con->entry_exists("Genres", "Name", $genre))
+			return $con->value("SELECT ID FROM Genres WHERE Name = '" . $genre . "'"); // Fetch Genre by name
 	}
 
 	return null;
