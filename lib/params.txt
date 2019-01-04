@@ -1,2 +1,5 @@
-debug=true
+debug=false
 types=AVI,MP4
+cover_max_filesize=1000000
+cover_max_width=150
+cover_max_height=200

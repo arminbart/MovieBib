@@ -2,11 +2,24 @@
 <head>
 	<?php
 		include 'db/dbconnect.php';
+		include 'lib/videohelpers.php';
 
 		$id = trim($_GET["id"]);
+
 		$con = new Connection();
 		$result = $con->query("SELECT * FROM Videos WHERE ID = " . $id);
 		$row = $result->fetch_assoc();
+
+		$coverfile = get_cover_filename($id);
+		if (!file_exists($coverfile))
+		{
+			$coverfile = "img/cover.png";
+		}
+		else //if (debug())
+		{
+			list($w, $h) = getimagesize($coverfile);
+			$coverinfo = $w . " x " . $h;
+		}
 	?>
 	<style>
 		body {
@@ -26,19 +39,26 @@
 		table {
 			margin-left:auto;
 			margin-right:auto;
+			border-collapse: collapse;
+		}
+		table, th, td {
+			/*border: 1px solid white;*/
 		}
 		img {
 		  float: right;
 		  /*vertical-align: top;*/
 		}
 		#spacer_small {
-			height: 5;
+			height: 5px;
+			font-size: 12;
 		}
 		#spacer_medium {
-			height: 20;
+			height: 20px;
+			font-size: 12;
 		}
 		#spacer_large {
-			height: 50;
+			height: 50px;
+			font-size: 12;
 		}
 		#title1 {
 			text-align: left;
@@ -72,11 +92,11 @@
 	</style>
 </head>
 <body>
-	<table border="0">
+	<table>
 		<tr>
 			<td style="width:  2%">&nbsp;</td>
 			<td style="width: 96%">		
-				<table border="0">
+				<table>
 					<tr>
 						<td style="width:  5%">&nbsp;</td>
 						<td style="width: 10%">&nbsp;</td>
@@ -109,7 +129,14 @@
 					<tr>
 						<td colspan="2" id="title3">Alternativtitel</td>
 						<td colspan="1"><?php echo $row["OtherTitles"] != "" ? $row["OtherTitles"] : "- / -"; ?></td>
-						<td rowspan="9"><img src="img/cover.png"></td>
+						<td rowspan="9">
+							<table>
+								<tr>
+									<td style="width: 40px">&nbsp;</td>
+									<td><a href="edit_cover.php?id=<?php echo $id; ?>"><img src="<?php echo $coverfile; ?>"></a></td>
+								</tr>
+							</table>
+						</td>
 					</tr>
 					<tr>
 						<td colspan="2" id="title3">Originaltitel</td>
@@ -143,7 +170,7 @@
 						<td colspan="1"><?php echo $row["File"]; ?></td>
 					</tr>
 					<tr>
-						<td colspan="4" id="spacer_large"></td>
+						<td colspan="4" id="spacer_large" style="text-align: right; vertical-align: text-top;"><?php echo $coverinfo; ?></td>
 					</tr>
 					<?php if ($row["Director"] != "") { ?>
 					<tr>
@@ -162,7 +189,7 @@
 					</tr>
 					<tr>
 						<td colspan="4" id="title2">Bewertung<br>
-							<table border="0" style="margin-left: 0;">
+							<table style="margin-left: 0;">
 								<tr>
 									<td colspan="5" id="spacer_small"></td>
 								</tr>
