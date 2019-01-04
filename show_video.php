@@ -7,7 +7,7 @@
 		$id = trim($_GET["id"]);
 
 		$con = new Connection();
-		$result = $con->query("SELECT * FROM Videos WHERE ID = " . $id);
+		$result = $con->query("SELECT *, (SELECT Name FROM Genres WHERE ID = Genre) AS GenreName FROM Videos WHERE ID = " . $id);
 		$row = $result->fetch_assoc();
 
 		$coverfile = get_cover_filename($id);
@@ -114,8 +114,8 @@
 						<td colspan="3" id="spacer_small"></td>
 					</tr>
 					<tr>
-						<td colspan="2" id="title3"><?php echo $row["Genre"] != "" ? $row["Genre"] : "(Genre unbekannt)"; ?></td>
-						<td colspan="1"><?php echo str_replace(",", ", ", $row["SubGenre"]); ?></td>			
+						<td colspan="2" id="title3"><?php echo $row["GenreName"]; ?></td>
+						<td colspan="1"><?php echo str_replace(",", ", ", $row["SubGenre"]); ?></td>
 					</tr>
 					<tr>
 						<td colspan="4" id="spacer_medium"></td>
