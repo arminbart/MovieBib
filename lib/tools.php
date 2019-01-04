@@ -31,14 +31,23 @@ function strpos_regex($string, $regex)
 		return false;
 }
 
+$PHP_PARAMS = array();
+
 function get_php_param($name, $paramfile = "lib/params.txt")
 {
+	global $PHP_PARAMS;
+
 	$maxretries = 100;
 	$value = get_http_param($name);
 
 	if ($value == "")
+		$value = $PHP_PARAMS[$paramfile . "#" . $name];
+
+	if ($value == "")
 	{
 		$file = fopen($paramfile, "r");
+		if (!$file)
+			exit("Failed to open " . $paramfile .".");
 
 		while ($value == "" and $maxretries > 0 and !feof($file))
 		{
@@ -50,6 +59,7 @@ function get_php_param($name, $paramfile = "lib/params.txt")
 				$value = trim($values[1]);
 		}
 
+		$PHP_PARAMS[$paramfile . "#" . $name] = $value;
 		fclose($file);
 	}
 
