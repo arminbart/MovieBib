@@ -75,15 +75,17 @@ class Connection
 	function value($stmt)
 	{
 		$result = $this->query($stmt);
+		$value = null;
 
 		if ($result !== null)
 		{
 			$row = $result->fetch_row();
 			if ($row !== null)
-				return $row[0];
+				$value = $row[0];
+			$result->close();
 		}
 
-		return null;
+		return $value;
 	}
 
 	function table_exists($table)
