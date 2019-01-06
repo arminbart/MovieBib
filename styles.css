@@ -21,6 +21,22 @@ table, th, td {
 	text-align: center;
 }
 
+a {
+	text-decoration: none;
+}
+a:link {
+	color: white;
+} /* unvisited link */
+a:visited {
+	color: white;
+} /* visited link */
+a:hover {
+	color: #440000;
+} /* mouse over link */
+a:active {
+	color: #440000;
+} /* selected link */
+
 
 #spacer_small {
 	height: 5px;
