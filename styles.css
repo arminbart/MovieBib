@@ -3,6 +3,7 @@ body {
 	font-family: helvetica;	
 	color: #666666;
 	font-size: 14;
+	text-align: left;
 	vertical-align: text-top;
 }
 
@@ -18,7 +19,7 @@ table {
 
 table, th, td {
 	/*border: 1px solid white;*/
-	text-align: center;
+	/*text-align: center;*/
 }
 
 a {
@@ -50,19 +51,16 @@ a:active {
 
 #title_small {
 	color: white;
-	text-align: left;
 	vertical-align: text-top;
 }
 #title_medium {
 	color: white;
 	font-size: 18;
-	text-align: left;
 	vertical-align: text-top;
 }
 #title_large {
 	color: white;
 	font-size: 26;
-	text-align: left;
 	vertical-align: text-top;
 }
 

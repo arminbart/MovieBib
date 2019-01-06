@@ -129,7 +129,7 @@
 		<?php
 				}
 		?>
-			<td style="text-align: left;"><a href="show_video.php?id=<?php echo $row["ID"]; ?>&session=<?php echo $session; ?>"><?php echo $row["Title"]; ?></a></td>
+			<td><a href="show_video.php?id=<?php echo $row["ID"]; ?>&session=<?php echo $session; ?>"><?php echo $row["Title"]; ?></a></td>
 		<?php
 				if ($col == 2)
 				{

@@ -26,7 +26,7 @@
 	?>
 </head>
 <body>
-	<table>
+	<table style="text-align: center;">
 		<?php if (verify_session(get_php_param("session")) == null) { ?>
 		<tr>
 			<td>
