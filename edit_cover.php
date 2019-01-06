@@ -30,12 +30,14 @@
 		<?php if (verify_session(get_php_param("session")) == null) { ?>
 		<tr>
 			<td>
+				<a href="show_video.php?id=<?php echo $id; ?>">&lt;</a><br>
 				<a href="login.php?from=edit_cover;id;<?php echo $id; ?>">Einloggen zum Hochladen eines Bildes.</a>
 			</td>
 		</tr>
 		<?php } else { ?>
 		<tr>
 			<td>
+				<a href="show_video.php?id=<?php echo $id; ?><?php if ($nick != null) { echo "&session=" . $session; } ?>">&lt;</a></br>
 				<img src="<?php echo $coverfile; ?>">
 			</td>
 		</tr>

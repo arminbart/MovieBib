@@ -45,7 +45,7 @@
 			<td style="width: 96%;">
 				<table>
 					<tr>
-						<td style="width:  5%;">&nbsp;</td>
+						<td style="width:  5%;"><a href="index.php<?php if ($nick != null) { echo "?session=" . $session; } ?>">&lt;</a></td>
 						<td style="width: 10%;">&nbsp;</td>
 						<td style="width: 60%;">&nbsp;</td>
 						<td style="width: 25%;text-align: right;">
