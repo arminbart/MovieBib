@@ -1,5 +1,7 @@
 <html>
 <head>
+	<link rel="stylesheet" href="styles.css">
+
 	<script>
 		function validateForm()
 		{
@@ -11,6 +13,7 @@
 				return true;
  		}
 	</script>
+
 	<?php
 		include 'lib/tools.php';
 		include 'lib/videohelpers.php';
@@ -21,33 +24,6 @@
 		if (!file_exists($coverfile))
 			$coverfile = "img/cover.png";
 	?>
-	<style>
-		body {
-			background-color: black;
-			font-family: helvetica;	
-			color: #666666;
-			font-size: 14;
-			vertical-align: text-top;
-		}
-		table {
-			margin-left:auto;
-			margin-right:auto;
-			border-collapse: collapse;
-		}
-		table, th, td {
-			text-align: center;
-			/*border: 1px solid white;*/
-		}
-		#spacer_small {
-			height: 5px;
-		}
-		#spacer_medium {
-			height: 20px;
-		}
-		#spacer_large {
-			height: 50px;
-		}
-	</style>
 </head>
 <body>
 	<table>
