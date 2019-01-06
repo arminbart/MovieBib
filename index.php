@@ -84,7 +84,7 @@
 					if ($first)
 						$first = false;
 					else
-						echo '<font color="#666666"> | </font>';
+						echo '<font face="arial" color="#666666"> | </font>';
 					echo $row["Name"];
 				}
 				$result->close();
