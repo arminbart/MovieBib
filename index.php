@@ -2,14 +2,6 @@
 <head>
 	<link rel="stylesheet" href="styles.css">
 
-	<?php
-		include 'db/dbconnect.php';
-
-		$con = new Connection();
-		
-
-	?>
-	
 	<style>
 		table, th, td {
 			/*border: 1px solid white;*/
@@ -24,6 +16,14 @@
 			color: #440000;
 		}
 	</style>
+
+	<?php
+		include 'db/dbconnect.php';
+		include 'lib/session.php';
+
+		$session = get_php_param("session");
+		$con = new Connection();
+	?>
 </head>
 <body>
 	<table>
@@ -34,7 +34,16 @@
 		<tr>
 			<td style="width:  2%;">&nbsp;</td>
 			<td style="width: 49%;">&nbsp;</td>
-			<td style="width: 49%;">&nbsp;</td>
+			<td style="width: 49%; text-align: right;">
+			<?php
+				$nick = verify_session($session);
+
+				if ($nick != "")
+					echo $nick;
+				else
+					echo '<a href="login.php?from=index">Login</a>';
+			?>
+			</td>
 		</tr>
 		<tr>
 			<td colspan="3">
@@ -120,7 +129,7 @@
 		<?php
 				}
 		?>
-			<td style="text-align: left;"><a href="show_video.php?id=<?php echo $row["ID"]; ?>"><?php echo $row["Title"]; ?></a></td>
+			<td style="text-align: left;"><a href="show_video.php?id=<?php echo $row["ID"]; ?>&session=<?php echo $session; ?>"><?php echo $row["Title"]; ?></a></td>
 		<?php
 				if ($col == 2)
 				{

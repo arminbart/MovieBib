@@ -2,27 +2,6 @@
 <head>
 	<link rel="stylesheet" href="styles.css">
 
-	<?php
-		include 'db/dbconnect.php';
-		include 'lib/videohelpers.php';
-
-		$id = trim($_GET["id"]);
-
-		$con = new Connection();
-		$result = $con->query("SELECT *, (SELECT Name FROM Genres WHERE ID = Genre) AS GenreName FROM Videos WHERE ID = " . $id);
-		$row = $result->fetch_assoc();
-
-		$coverfile = get_cover_filename($id);
-		if (!file_exists($coverfile))
-		{
-			$coverfile = "img/cover.png";
-		}
-		else //if (debug())
-		{
-			list($w, $h) = getimagesize($coverfile);
-			$coverinfo = $w . " x " . $h;
-		}
-	?>
 	<style>
 		img {
 			float: right;
@@ -33,6 +12,31 @@
 			text-align: center;
 		}
 	</style>
+
+	<?php
+		include 'db/dbconnect.php';
+		include 'lib/session.php';
+		include 'lib/videohelpers.php';
+
+		$id = get_php_param("id");
+		$session = get_php_param("session");
+		$nick = verify_session($session);
+
+		$con = new Connection();
+		$result = $con->query("SELECT *, (SELECT Name FROM Genres WHERE ID = Genre) AS GenreName FROM Videos WHERE ID = " . $id);
+		$row = $result->fetch_assoc();
+
+		$coverfile = get_cover_filename($id);
+		if (!file_exists($coverfile) or $nick == null)
+		{
+			$coverfile = "img/cover.png";
+		}
+		else //if (debug())
+		{
+			list($w, $h) = getimagesize($coverfile);
+			$coverinfo = $w . " x " . $h;
+		}
+	?>
 </head>
 <body>
 	<table>
@@ -44,14 +48,21 @@
 						<td style="width:  5%;">&nbsp;</td>
 						<td style="width: 10%;">&nbsp;</td>
 						<td style="width: 60%;">&nbsp;</td>
-						<td style="width: 25%;">&nbsp;</td>
+						<td style="width: 25%;text-align: right;">
+						<?php
+							if ($nick != "")
+								echo $nick;
+							else
+								echo '<a href="login.php?from=show_video;id;' . $id . '">Login</a>';
+						?>
+						</td>
 					</tr>
 					<tr>
 						<td colspan="4" id="title_large"><?php echo $row["Title"] . " [" . ($row["Lang"] == "de" ? "dt" : $row["Lang"]) . ".]"; ?><hr></td>
 					</tr>
 					<tr>
 						<td colspan="3" id="title_medium"><?php echo ($row["Country"] != "" ? $row["Country"] : "(Produktionsland unbekannt)") . " " . ($row["Year"] > 0 ? $row["Year"] : "(Jahr unbekannt)") ?></td>
-						<td rowspan="3"><img src="img/edit.png"></td>
+						<td rowspan="3"><?php if ($nick != "") { ?><img src="img/edit.png"><?php } ?></td>
 					</tr>
 					<tr>
 						<td colspan="3" id="spacer_small"></td>
@@ -76,7 +87,7 @@
 							<table style="margin-right: 0;">
 								<tr>
 									<td style="width: 40px;">&nbsp;</td>
-									<td><a href="edit_cover.php?id=<?php echo $id; ?>"><img src="<?php echo $coverfile; ?>"></a></td>
+									<td><a href="edit_cover.php?session=<?php echo $session; ?>&id=<?php echo $id; ?>"><img src="<?php echo $coverfile; ?>"></a></td>
 								</tr>
 							</table>
 						</td>

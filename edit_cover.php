@@ -15,7 +15,7 @@
 	</script>
 
 	<?php
-		include 'lib/tools.php';
+		include 'lib/session.php';
 		include 'lib/videohelpers.php';
 
 		$id = get_http_param("id");
@@ -27,6 +27,13 @@
 </head>
 <body>
 	<table>
+		<?php if (verify_session(get_php_param("session")) == null) { ?>
+		<tr>
+			<td>
+				<a href="login.php?from=edit_cover;id;<?php echo $id; ?>">Einloggen zum Hochladen eines Bildes.</a>
+			</td>
+		</tr>
+		<?php } else { ?>
 		<tr>
 			<td>
 				<img src="<?php echo $coverfile; ?>">
@@ -40,11 +47,12 @@
 				<form method="post" action="save_cover.php" enctype="multipart/form-data">
 					<input type="hidden" name="id" value="<?php echo $id; ?>" />
 					<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo get_php_param('cover_max_filesize'); ?>" />
-            		<input type="file" accept="image/jpeg" name="image" id="image" />
-            		<input type="submit" value='Save' onclick="return validateForm()"/>
+					<input type="file" accept="image/jpeg" name="image" id="image" />
+					<input type="submit" value='Save' onclick="return validateForm()"/>
         		</form>
 			</td>
 		</tr>
+		<?php } ?>
 		<?php if (get_http_param("err") == "no_file") { ?>
 		<tr>
 			<td id="spacer_medium"></td>
