@@ -1,6 +1,6 @@
 <?php
 
-include 'lib/tools.php';
+include_once 'lib/tools.php';
 
 class Connection
 {
@@ -46,7 +46,7 @@ class Connection
 		debug_out("SQL statement: " . $stmt, false);
 
 		if (!$this->sqli->query($stmt))
-			exit("Executing SQL statement failed: " . $stmt);
+			exit("Executing SQL statement failed: " . $stmt . "<br>" . $this->sqli->error);
 	}
 
 	// Executes SQL statement and returns true, if successfull
@@ -66,7 +66,7 @@ class Connection
 		debug_out("SQL query: " . $stmt, false);
 
 		if (!$this->sqli->real_query($stmt))
-			exit("Executing SQL query failed: " . $stmt);
+			exit("Executing SQL query failed: " . $stmt . "<br>" . $this->sqli->error);
 
 		return $this->sqli->use_result();
 	}

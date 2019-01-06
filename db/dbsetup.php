@@ -1,6 +1,6 @@
 <?php
 
-include 'db/dbconnect.php';
+include_once 'db/dbconnect.php';
 
 function init_db()
 {
