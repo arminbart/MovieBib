@@ -87,7 +87,7 @@
 							<table style="margin-right: 0;">
 								<tr>
 									<td style="width: 40px;">&nbsp;</td>
-									<td><a href="edit_cover.php?session=<?php echo $session; ?>&id=<?php echo $id; ?>"><img src="<?php echo $coverfile; ?>"></a></td>
+									<td><a href="edit_cover.php?id=<?php echo $id; ?><?php if ($nick != null) { echo "&session=" . $session; } ?>"><img src="<?php echo $coverfile; ?>"></a></td>
 								</tr>
 							</table>
 						</td>
