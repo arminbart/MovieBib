@@ -139,7 +139,7 @@
 					</tr>
 					<?php } ?>
 					<tr>
-						<td colspan="3" id="spacer_large"></td>
+						<td colspan="3" id="spacer_large" style="color: black;">This text is here just to give the browser a hint that it should use a certain minimum width if possible. A simple form of res-pon-sive-ness if you will.</td>
 					</tr>
 					<tr>
 						<td colspan="3" id="title_small">Bewertung<br>
