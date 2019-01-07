@@ -80,12 +80,12 @@
 						<td colspan="4" id="text_small"><?php echo $row["Info"] != "" ? $row["Info"] : "Keine Beschreibung vorhanden"; ?></td>
 					</tr>
 					<tr>
-						<td colspan="4" id="spacer_medium"></td>
+						<td colspan="4" id="spacer_medium" style="text-align: right;"><?php echo $coverinfo; ?></td>
 					</tr>
 					<tr>
 						<td colspan="2" id="title_small">Alternativtitel</td>
 						<td colspan="1"><?php echo $row["OtherTitles"] != "" ? $row["OtherTitles"] : "- / -"; ?></td>
-						<td rowspan="9">
+						<td rowspan="11">
 							<table style="margin-right: 0;">
 								<tr>
 									<td style="width: 40px;">&nbsp;</td>
@@ -126,7 +126,10 @@
 						<td colspan="1"><?php echo $row["File"]; ?></td>
 					</tr>
 					<tr>
-						<td colspan="4" id="spacer_large" style="text-align: right; vertical-align: text-top;"><?php echo $coverinfo; ?></td>
+						<td colspan="3" id="spacer_large"></td>
+					</tr>
+					<tr>
+						<td colspan="3" id="spacer_large"></td>
 					</tr>
 					<?php if ($row["Director"] != "") { ?>
 					<tr>
