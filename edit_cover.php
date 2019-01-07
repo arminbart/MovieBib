@@ -39,7 +39,7 @@
 		<?php } else { ?>
 		<tr>
 			<td>
-				<a href="show_video.php?id=<?php echo $id; ?><?php if ($nick != null) { echo "&session=" . $session; } ?>">&lt;</a></br>
+				<a href="show_video.php?id=<?php echo $id; ?><?php if ($nick != null) { echo "&session=" . $session; } ?>">&lt;</a><br>
 				<img src="<?php echo $coverfile; ?>">
 			</td>
 		</tr>
