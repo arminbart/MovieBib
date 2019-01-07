@@ -26,7 +26,7 @@
 	<table>
 		<tr>
 			<td>
-				<a href="<?php echo get_forward_header(get_http_param("from")); ?>">&lt;</a><br>
+				<a href="<?php echo get_forward_page(get_http_param("from")); ?>">&lt;</a><br>
 				<form method="post" action="verify_login.php?from=<?php echo get_http_param("from"); ?>" enctype="multipart/form-data">
 					<input type="text" name="nick" size="30" value="Name"/><br>
 					<input type="password" name="pass" size="30"/><br>

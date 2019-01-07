@@ -1,6 +1,7 @@
 <?php
 
 include 'lib/session.php';
+include 'lib/videohelpers.php';
 
 $from = get_http_param("from");
 $nick = get_http_param("nick");

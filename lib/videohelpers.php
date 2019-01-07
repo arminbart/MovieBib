@@ -8,7 +8,7 @@ function get_cover_filename($id)
 	return "img/covers/" . $filename . "_" . substr($hash, 0, 5) . ".jpg";
 }
 
-function get_forward_header($from, $session = 0)
+function get_forward_page($from, $session = 0)
 {
 	$params = explode(";", $from);
 	$forward = $params[0] . ".php?session=" . $session;
