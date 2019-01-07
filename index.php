@@ -1,5 +1,7 @@
 <html>
 <head>
+	<title>MovieBib - Film- und Video-Bibliothek</title>
+
 	<link rel="stylesheet" href="styles.css">
 
 	<style>

@@ -1,5 +1,7 @@
 <html>
 <head>
+	<title>MovieBib - Login</title>
+
 	<link rel="stylesheet" href="styles.css">
 
 	<script>

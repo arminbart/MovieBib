@@ -37,6 +37,8 @@
 			$coverinfo = $w . " x " . $h;
 		}
 	?>
+
+	<title>MovieBib - <?php echo $row["Title"]; ?></title>
 </head>
 <body>
 	<table>
