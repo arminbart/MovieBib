@@ -48,4 +48,9 @@ function verify_session($session)
 	return $nick;
 }
 
+function session_param($nick, $session, $id = 0)
+{
+	return "?s=" . ($nick != null ? intval($session) : 0) . ($id != 0 ? "&id=" . $id : ""); 
+}
+
 ?>

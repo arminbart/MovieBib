@@ -1,15 +1,25 @@
 <?php
 
-include 'lib/tools.php';
-include 'lib/videohelpers.php';
+include_once 'lib/session.php';
+include_once 'lib/tools.php';
+include_once 'lib/videohelpers.php';
 
 $id = get_http_param("id");
+$session = get_php_param("s");
+$nick = verify_session($session);
+
 $tmpname = $_FILES['image']['tmp_name'];
 $filename = get_cover_filename($id);
 
-if ($tmpname == "")
+
+if ($nick == null)
 {
-	header("Location: http://video.bartmail.de/edit_cover.php?id=" . $id . "&err=no_file");
+	header("Location: http://video.bartmail.de/login.php");
+	exit();
+}
+else if ($tmpname == "")
+{
+	header("Location: http://video.bartmail.de/edit_cover.php" . session_param($nick, $session, $id) . "&err=no_file");
 	exit();
 }
 else
@@ -58,7 +68,7 @@ else
 		imagedestroy($newimg);
 	}
 
-	header("Location: http://video.bartmail.de/show_video.php?id=" . $id);
+	header("Location: http://video.bartmail.de/show_video.php" . session_param($nick, $session, $id));
 	exit();
 }
 

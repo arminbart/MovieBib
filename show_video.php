@@ -14,12 +14,12 @@
 	</style>
 
 	<?php
-		include 'db/dbconnect.php';
-		include 'lib/session.php';
-		include 'lib/videohelpers.php';
+		include_once 'db/dbconnect.php';
+		include_once 'lib/session.php';
+		include_once 'lib/videohelpers.php';
 
 		$id = get_php_param("id");
-		$session = get_php_param("session");
+		$session = get_php_param("s");
 		$nick = verify_session($session);
 
 		$con = new Connection();
@@ -47,16 +47,10 @@
 			<td style="width: 96%;">
 				<table>
 					<tr>
-						<td style="width:  5%;"><a href="index.php<?php if ($nick != null) { echo "?session=" . $session; } ?>">&lt;</a></td>
+						<td style="width:  5%;"><a href="index.php<?php echo session_param($nick, $session); ?>">&lt;</a></td>
 						<td style="width: 10%;">&nbsp;</td>
 						<td style="width: 60%;">&nbsp;</td>
-						<td style="width: 25%;text-align: right;">
-						<?php
-							if ($nick != "")
-								echo $nick;
-							else
-								echo '<a href="login.php?from=show_video;id;' . $id . '">Login</a>';
-						?>
+						<td style="width: 25%;text-align: right;"><?php echo $nick != "" ? $nick : '<a href="login.php?from=show_video;id;' . $id . '">Login</a>'; ?>
 						</td>
 					</tr>
 					<tr>
@@ -89,7 +83,7 @@
 							<table style="margin-right: 0;">
 								<tr>
 									<td style="width: 40px;">&nbsp;</td>
-									<td><a href="edit_cover.php?id=<?php echo $id; ?><?php if ($nick != null) { echo "&session=" . $session; } ?>"><img src="<?php echo $coverfile; ?>"></a></td>
+									<td><a href="edit_cover.php<?php echo session_param($nick, $session, $id); ?>"><img src="<?php echo $coverfile; ?>"></a></td>
 								</tr>
 							</table>
 						</td>

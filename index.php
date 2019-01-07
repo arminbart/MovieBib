@@ -20,10 +20,12 @@
 	</style>
 
 	<?php
-		include 'db/dbconnect.php';
-		include 'lib/session.php';
+		include_once 'db/dbconnect.php';
+		include_once 'lib/session.php';
 
-		$session = get_php_param("session");
+		$session = get_php_param("s");
+		$nick = verify_session($session);
+
 		$con = new Connection();
 	?>
 </head>
@@ -36,16 +38,7 @@
 		<tr>
 			<td style="width:  2%;">&nbsp;</td>
 			<td style="width: 49%;">&nbsp;</td>
-			<td style="width: 49%; text-align: right;">
-			<?php
-				$nick = verify_session($session);
-
-				if ($nick != "")
-					echo $nick;
-				else
-					echo '<a href="login.php?from=index">Login</a>';
-			?>
-			</td>
+			<td style="width: 49%; text-align: right;"><?php echo $nick != "" ? $nick : '<a href="login.php?from=index">Login</a>'; ?></td>
 		</tr>
 		<tr>
 			<td colspan="3">
@@ -134,7 +127,7 @@
 		<?php
 				}
 		?>
-			<td><a href="show_video.php?id=<?php echo $row["ID"]; ?><?php if ($nick != null) { echo "&session=" . $session; } ?>"><?php echo $row["Title"]; ?></a></td>
+			<td><a href="show_video.php<?php echo session_param($nick, $session, $row["ID"]); ?>"><?php echo $row["Title"]; ?></a></td>
 		<?php
 				if ($col == 2)
 				{

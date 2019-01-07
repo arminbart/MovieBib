@@ -18,8 +18,8 @@
 	</script>
 
 	<?php
-		include 'lib/tools.php';
-		include 'lib/videohelpers.php';
+		include_once 'lib/tools.php';
+		include_once 'lib/videohelpers.php';
 	?>
 </head>
 <body>

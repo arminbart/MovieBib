@@ -17,10 +17,12 @@
 	</script>
 
 	<?php
-		include 'lib/session.php';
-		include 'lib/videohelpers.php';
+		include_once 'lib/session.php';
+		include_once 'lib/videohelpers.php';
 
 		$id = get_http_param("id");
+		$session = get_php_param("s");
+		$nick = verify_session($session);
 
 		$coverfile = get_cover_filename($id);
 		if (!file_exists($coverfile))
@@ -29,7 +31,7 @@
 </head>
 <body>
 	<table style="text-align: center;">
-		<?php if (verify_session(get_php_param("session")) == null) { ?>
+		<?php if ($nick == null) { ?>
 		<tr>
 			<td>
 				<a href="show_video.php?id=<?php echo $id; ?>">&lt;</a><br>
@@ -39,7 +41,7 @@
 		<?php } else { ?>
 		<tr>
 			<td>
-				<a href="show_video.php?id=<?php echo $id; ?><?php if ($nick != null) { echo "&session=" . $session; } ?>">&lt;</a><br>
+				<a href="show_video.php<?php echo session_param($nick, $session, $id); ?>">&lt;</a><br>
 				<img src="<?php echo $coverfile; ?>">
 			</td>
 		</tr>
@@ -48,8 +50,7 @@
 		</tr>
 		<tr>
 			<td>
-				<form method="post" action="save_cover.php" enctype="multipart/form-data">
-					<input type="hidden" name="id" value="<?php echo $id; ?>" />
+				<form method="post" action="save_cover.php<?php echo session_param($nick, $session, $id); ?>" enctype="multipart/form-data">
 					<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo get_php_param('cover_max_filesize'); ?>" />
 					<input type="file" accept="image/jpeg" name="image" id="image" />
 					<input type="submit" value='Save' onclick="return validateForm()"/>

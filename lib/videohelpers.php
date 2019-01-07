@@ -11,7 +11,7 @@ function get_cover_filename($id)
 function get_forward_page($from, $session = 0)
 {
 	$params = explode(";", $from);
-	$forward = $params[0] . ".php?session=" . $session;
+	$forward = $params[0] . ".php?s=" . $session;
 
 	for ($i = 1; count($params) > $i + 1; $i += 2)
 		$forward .= "&" . $params[$i] . "=" . $params[$i + 1];
