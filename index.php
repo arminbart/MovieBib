@@ -26,6 +26,7 @@
 		$session = get_php_param("s");
 		$nick = verify_session($session);
 
+		$search = get_php_param("search");
 		$con = new Connection();
 	?>
 </head>
@@ -41,10 +42,15 @@
 			<td style="width: 49%; text-align: right;"><?php echo $nick != "" ? $nick : '<a href="login.php?from=index">Login</a>'; ?></td>
 		</tr>
 		<tr>
-			<td colspan="3">
-				<table border="1">
+			<td colspan="3" style="text-align: center;">
+				<table>
 					<tr>
-						<td style="width: 500; text-align: center;" id="title_large">Suche</td>
+						<td style="width: 1050; text-align: center;">
+							<form method="post" action="index.php<?php echo session_param($nick, $session)?>" enctype="multipart/form-data">
+								<input type="text" name="search" size="75" value="<?php echo $search; ?>"/>
+								<input type="submit" value='Suche'/>
+							</form>
+						</td>
 					</tr>
 				</table>
 			</td>
@@ -72,7 +78,7 @@
 			<td colspan="3" id="spacer_medium"></td>
 		</tr>
 		<tr>
-			<td colspan="3" id="title_small" style="font-size: 14;">
+			<td colspan="3" id="title_small" style="font-size: 14; text-align: justify;">
 			<?php
 				$result = $con->query("SELECT * FROM Genres ORDER BY Name");
 				$first = true;
@@ -93,7 +99,9 @@
 			<td colspan="3" id="spacer_medium"></td>
 		</tr>
 		<?php
-			$result = $con->query("SELECT * FROM Videos ORDER BY CASE WHEN strcmp(Title, 'A') >= 0 AND strcmp(Title, 'ZZZ') <= 0 THEN 0 ELSE 1 END, Title");
+			if ($search != "")
+				$where = " WHERE Title LIKE '%" . $search . "%' ";
+			$result = $con->query("SELECT * FROM Videos " . $where . " ORDER BY CASE WHEN strcmp(Title, 'A') >= 0 AND strcmp(Title, 'ZZZ') <= 0 THEN 0 ELSE 1 END, Title");
 			$letter = "";
 			$col = 1;
 
