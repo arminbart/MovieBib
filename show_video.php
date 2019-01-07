@@ -39,6 +39,10 @@
 	?>
 
 	<title>MovieBib - <?php echo $row["Title"]; ?></title>
+
+	<?php if (get_php_param("no_cache") == 1) { ?>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<?php } ?>
 </head>
 <body>
 	<table>

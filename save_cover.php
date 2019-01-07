@@ -68,7 +68,7 @@ else
 		imagedestroy($newimg);
 	}
 
-	header("Location: http://video.bartmail.de/show_video.php" . session_param($nick, $session, $id));
+	header("Location: http://video.bartmail.de/show_video.php" . session_param($nick, $session, $id) . "&no_cache=1");
 	exit();
 }
 
