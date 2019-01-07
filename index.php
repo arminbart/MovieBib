@@ -68,6 +68,9 @@
 							<?php echo chr($i); ?>
 						</td>
 						<?php } ?>
+						<td style="width: 30px;">
+							0-9
+						</td>
 					</tr>
 				</table>
 			</td>
@@ -97,7 +100,7 @@
 			<td colspan="3" id="spacer_medium"></td>
 		</tr>
 		<?php
-			$result = $con->query("SELECT * FROM Videos ORDER BY Title");
+			$result = $con->query("SELECT * FROM Videos ORDER BY CASE WHEN strcmp(Title, 'A') >= 0 AND strcmp(Title, 'ZZZ') <= 0 THEN 0 ELSE 1 END, Title");
 			$letter = "";
 			$col = 1;
 
