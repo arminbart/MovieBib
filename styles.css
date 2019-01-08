@@ -64,7 +64,7 @@ a:active {
 	vertical-align: text-top;
 }
 
-text_small {
+#text_small {
 	text-align: left;
 	color: #666666;
 	font-size: 12;
