@@ -1,12 +1,12 @@
 <?php
 
-include 'db/dbconnect.php';
-include 'db/dbstatements.php';
+include_once 'api/apihelpers.php';
+include_once 'db/dbstatements.php';
 
 // Test:
 // http://video.bartmail.de/api.php?file=Abyss_Abgrund_des_Todes_18.11.25_20-15_arte_165_TVOON_DE.mpg.HD.cut.mp4&lang=de&location=Filme%20Deutsch%5CAbenteuer
 
-function add_video()
+function add_video($con)
 {
 	$filename = get_http_param("file");
 	$location = str_replace("\\", "/", get_http_param("location"));
@@ -14,17 +14,15 @@ function add_video()
 	$genre = strtolower(get_http_param("genre"));
 
 	if ($filename == "" or $location == "" or $lang == "")
-		error_exit("To add a video, specify at least file, location and language.");
+		throw new ApiException("To add a video, specify at least file, location and language.");
 
 	if ($genre != "" and !genre_exists($genre))
-		error_exit("Invalid Genre '" . $genre . "'");
+		throw new ApiException("Invalid Genre '" . $genre . "'");
 
 	$cut = is_cut($filename);
 	$res = extract_resolution($filename);
 	$type = extract_type($filename);
 	$title = suggest_title($filename);
-
-	$con = new Connection();
 
 	if ($genre == "")
 		$genre = extract_genre($con, $location);
@@ -38,8 +36,8 @@ function add_video()
 	debug_out("type: " . $type);
 	debug_out("resolution: " . $res);
 
-	if ($con->value("SELECT count(*) FROM Videos WHERE File = '" . $filename . "'"))
-		error_exit("Video '" . $filename . "' already added.", true);
+	if ($con->value("SELECT count(*) FROM Videos WHERE File = '" . $filename . "' OR OrigFile = '" . $filename . "'"))
+		throw new ApiException("Video '" . $filename . "' already added.", true);
 
 	$stmt = new InsertStatement("Videos");
 	$stmt->addValue("Title",		$title);
@@ -56,12 +54,7 @@ function add_video()
 	$con->execute($stmt->stmt());
 	$id = $con->value("SELECT max(ID) FROM Videos");
 
-	echo "Added video $id: $title";
-}
-
-function error_exit($msg, $warning = false)
-{
-	exit(($warning ? "Warning" : "Error") . ": $msg");
+	return "Added video $id: $title";
 }
 
 function suggest_title($filename)
@@ -101,7 +94,7 @@ function extract_type($filename)
 	if ($pos > 0)
 		$type = strtoupper(substr($filename, $pos + 1));
 	if ($type == "" or !in_array($type, $types))
-		error_exit("Unsupported file type '" . $type . "' or invalid file name '" . $filename . "'.");
+		throw new ApiException("Unsupported file type '" . $type . "' or invalid file name '" . $filename . "'.");
 
 	return $type;
 }
