@@ -29,7 +29,7 @@ else
 	$video->lang = get_http_param("lang");
 	$video->year = intval(get_http_param("year"));
 	$video->duration = intval(get_http_param("duration"));
-	$video->medium = strtoupper(get_http_param("medium"));
+	$video->medium = get_medium(get_http_param("medium"), get_http_param("file"));
 	$video->resolution = strtoupper(get_http_param("resolution"));
 	$video->cut = boolval(get_http_param("cut"));
 	$video->file = get_http_param("file");
@@ -53,5 +53,27 @@ else
 }
 
 exit();
+
+function get_medium($type, $filename)
+{
+	if ($type == "auto")
+	{
+		$types = explode(",", get_php_param("types"));
+		$pos = strrpos($filename, ".");
+
+		if ($pos > 0)
+		{
+			$type = strtoupper(substr($filename, $pos + 1));
+			if (in_array($type, $types))
+				return $type;
+		}
+
+		return null; // Empty is also a valid Medium (and means, we don't have the video physically)
+	}
+	else
+	{
+		return strtoupper($type);
+	}
+}
 
 ?>
