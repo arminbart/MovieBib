@@ -14,10 +14,10 @@ function add_video()
 	$genre = strtolower(get_http_param("genre"));
 
 	if ($filename == "" or $location == "" or $lang == "")
-		exit("To add a video, specify at least file, location and language.");
+		error_exit("To add a video, specify at least file, location and language.");
 
 	if ($genre != "" and !genre_exists($genre))
-		exit("Invalid Genre '" . $genre . "'");
+		error_exit("Invalid Genre '" . $genre . "'");
 
 	$cut = is_cut($filename);
 	$res = extract_resolution($filename);
@@ -39,7 +39,7 @@ function add_video()
 	debug_out("resolution: " . $res);
 
 	if ($con->value("SELECT count(*) FROM Videos WHERE File = '" . $filename . "'"))
-		exit("Video '" . $filename . "' already added.");
+		error_exit("Video '" . $filename . "' already added.", true);
 
 	$stmt = new InsertStatement("Videos");
 	$stmt->addValue("Title",		$title);
@@ -57,6 +57,11 @@ function add_video()
 	$id = $con->value("SELECT max(ID) FROM Videos");
 
 	echo "Added video $id: $title";
+}
+
+function error_exit($msg, $warning = false)
+{
+	exit(($warning ? "Warning" : "Error") . ": $msg");
 }
 
 function suggest_title($filename)
@@ -96,7 +101,7 @@ function extract_type($filename)
 	if ($pos > 0)
 		$type = strtoupper(substr($filename, $pos + 1));
 	if ($type == "" or !in_array($type, $types))
-		exit("Unsupported file type '" . $type . "' or invalid file name '" . $filename . "'.");
+		error_exit("Unsupported file type '" . $type . "' or invalid file name '" . $filename . "'.");
 
 	return $type;
 }
