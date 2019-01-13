@@ -1,1 +1,8 @@
+# Disable directory browsing
 Options -Indexes
+
+# Deny access to .txt files
+<FilesMatch "\.txt$">
+	# Order allow, deny
+	Deny from all
+</FilesMatch>
