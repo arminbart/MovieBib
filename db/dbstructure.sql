@@ -14,7 +14,7 @@ CREATE TABLE Users (
 
 CREATE TABLE Videos (
 	ID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-	Status INT(1),
+	Status INT(1) DEFAULT 0,
 	Rating INT(1),
 	Title TEXT,
 	OrigTitle TEXT,
