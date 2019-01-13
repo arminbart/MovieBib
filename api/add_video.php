@@ -42,18 +42,21 @@ function add_video()
 		exit("Video '" . $filename . "' already added.");
 
 	$stmt = new InsertStatement("Videos");
-	$stmt->addValue("Title",      $title);
-	$stmt->addValue("Lang",       $lang);
-	$stmt->addValue("File",       $filename);
-	$stmt->addValue("Location",   $location);
-	$stmt->addValue("Medium",     $type);
-	$stmt->addValue("Resolution", $res);
+	$stmt->addValue("Title",		$title);
+	$stmt->addValue("Lang",			$lang);
+	$stmt->addValue("File",			$filename);
+	$stmt->addValue("OrigFile",		$filename);
+	$stmt->addValue("OrigLocation",	$location);
+	$stmt->addValue("Cut",			$cut);
+	$stmt->addValue("Medium",		$type);
+	$stmt->addValue("Resolution",	$res);
 	if ($genre != "")
-		$stmt->addValue("Genre", $genre);
+		$stmt->addValue("Genre",	$genre);
 
 	$con->execute($stmt->stmt());
 	$id = $con->value("SELECT max(ID) FROM Videos");
-	debug_out("Added video '" . $title . "' (ID = " . $id . ")");
+
+	echo "Added video $id: $title";
 }
 
 function suggest_title($filename)

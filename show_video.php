@@ -6,11 +6,6 @@
 		img {
 			float: right;
 		}
-
-		rating {
-			width: 30px;
-			text-align: center;
-		}
 	</style>
 
 	<?php
@@ -26,16 +21,7 @@
 		$result = $con->query("SELECT *, (SELECT Name FROM Genres WHERE ID = Genre) AS GenreName FROM Videos WHERE ID = " . $id);
 		$row = $result->fetch_assoc();
 
-		$coverfile = get_cover_filename($id);
-		if (!file_exists($coverfile) or $nick == null)
-		{
-			$coverfile = "img/cover.png";
-		}
-		else //if (debug())
-		{
-			list($w, $h) = getimagesize($coverfile);
-			$coverinfo = $w . " x " . $h;
-		}
+		$coverfile = get_cover_filename($id, true, $nick);
 	?>
 
 	<title>MovieBib - <?php echo $row["Title"]; ?></title>
@@ -54,22 +40,21 @@
 						<td style="width:  5%;"><a href="index.php<?php echo session_param($nick, $session); ?>">&lt;</a></td>
 						<td style="width: 10%;">&nbsp;</td>
 						<td style="width: 60%;">&nbsp;</td>
-						<td style="width: 25%;text-align: right;"><?php echo $nick != "" ? $nick : '<a href="login.php?from=show_video;id;' . $id . '">Login</a>'; ?>
-						</td>
+						<td style="width: 25%;text-align: right;"><?php echo $nick != "" ? $nick : '<a href="login.php?from=show_video;id;' . $id . '">Login</a>'; ?></td>
 					</tr>
 					<tr>
 						<td colspan="4" id="title_large"><?php echo $row["Title"] . " [" . ($row["Lang"] == "de" ? "dt" : $row["Lang"]) . ".]"; ?><hr></td>
 					</tr>
 					<tr>
 						<td colspan="3" id="title_medium"><?php echo ($row["Country"] != "" ? $row["Country"] : "(Produktionsland unbekannt)") . " " . ($row["Year"] > 0 ? $row["Year"] : "(Jahr unbekannt)") ?></td>
-						<td rowspan="3"><?php if ($nick != "") { ?><img src="img/edit.png"><?php } ?></td>
+						<td rowspan="3"><?php if ($nick != "") { ?><a href="edit_video.php<?php echo session_param($nick, $session, $id); ?>"><img src="img/edit.png"></a><?php } ?></td>
 					</tr>
 					<tr>
 						<td colspan="3" id="spacer_small"></td>
 					</tr>
 					<tr>
 						<td colspan="2" id="title_small"><?php echo $row["GenreName"]; ?></td>
-						<td colspan="1"><?php echo str_replace(",", ", ", $row["SubGenre"]); ?></td>
+						<td colspan="1"><?php echo str_replace(";", ", ", $row["OtherGenres"]); ?></td>
 					</tr>
 					<tr>
 						<td colspan="4" id="spacer_medium"></td>
@@ -78,11 +63,11 @@
 						<td colspan="4" id="text_small"><?php echo $row["Info"] != "" ? $row["Info"] : "Keine Beschreibung vorhanden"; ?></td>
 					</tr>
 					<tr>
-						<td colspan="4" id="spacer_medium" style="text-align: right;"><?php echo $coverinfo; ?></td>
+						<td colspan="4" id="spacer_medium" style="text-align: right;"><?php echo get_cover_info($coverfile); ?></td>
 					</tr>
 					<tr>
 						<td colspan="2" id="title_small">Alternativtitel</td>
-						<td colspan="1"><?php echo $row["OtherTitles"] != "" ? $row["OtherTitles"] : "- / -"; ?></td>
+						<td colspan="1"><?php echo $row["OtherTitles"] != "" ? str_replace(";","<br>", $row["OtherTitles"]) : "- / -"; ?></td>
 						<td rowspan="12" style="vertical-align:top;">
 							<table style="margin-right: 0;">
 								<tr>
@@ -113,7 +98,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" id="title_small">Format</td>
-						<td colspan="1"><?php echo $row["Medium"] . ($row["Resolution"] != "" ? ", " . $row["Resolution"] : ""); ?></td>
+						<td colspan="1"><?php echo $row["Medium"] . ($row["Resolution"] != "" ? ", " . $row["Resolution"] : "") . (boolval($row["Cut"]) ? "" : "&nbsp;&nbsp;(ungeschnitten)"); ?></td>
 					</tr>
 					<tr>
 						<td colspan="2" id="title_small">Spieldauer</td>
@@ -148,11 +133,11 @@
 									<td colspan="5" id="spacer_small"></td>
 								</tr>
 								<tr>
-									<td id="rating"><?php echo $row["Rating"] > 0 ? '<img src="img/star_red.png">' : '<img src="img/star_grey.png">'; ?></td>
-									<td id="rating"><?php echo $row["Rating"] > 1 ? '<img src="img/star_red.png">' : '<img src="img/star_grey.png">'; ?></td>
-									<td id="rating"><?php echo $row["Rating"] > 2 ? '<img src="img/star_red.png">' : '<img src="img/star_grey.png">'; ?></td>
-									<td id="rating"><?php echo $row["Rating"] > 3 ? '<img src="img/star_red.png">' : '<img src="img/star_grey.png">'; ?></td>
-									<td id="rating"><?php echo $row["Rating"] > 4 ? '<img src="img/star_red.png">' : '<img src="img/star_grey.png">'; ?></td>
+									<td id="rating"><?php echo $row["Rating"] > 0 ? '<img src="img/star5.png">' : '<img src="img/star1.png">'; ?></td>
+									<td id="rating"><?php echo $row["Rating"] > 1 ? '<img src="img/star5.png">' : '<img src="img/star1.png">'; ?></td>
+									<td id="rating"><?php echo $row["Rating"] > 2 ? '<img src="img/star5.png">' : '<img src="img/star1.png">'; ?></td>
+									<td id="rating"><?php echo $row["Rating"] > 3 ? '<img src="img/star5.png">' : '<img src="img/star1.png">'; ?></td>
+									<td id="rating"><?php echo $row["Rating"] > 4 ? '<img src="img/star5.png">' : '<img src="img/star1.png">'; ?></td>
 								</tr>
 							</table>
 						</td>

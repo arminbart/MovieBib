@@ -81,4 +81,29 @@ function get_http_param($name)
 	return $value;
 }
 
+function get_concat_param($name, $cnt, $separator = ";")
+{
+	$vals = array();
+
+	for ($i = 0; $i < $cnt; $i++)
+	{
+		$val = get_http_param($name . $i);
+		if ($val != "")
+			$vals[] = $val;
+	}
+
+	return concat($vals, $separator);
+}
+
+function concat(array $vals, $separator = ";")
+{
+	$result = "";
+
+	foreach ($vals as $val)
+		if (trim($val) != "")
+			$result .= ($result == "" ? "" : $separator) . trim($val);
+
+	return $result;
+}
+
 ?>

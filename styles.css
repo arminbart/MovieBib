@@ -72,3 +72,8 @@ a:active {
 	text-align: justify;
 	vertical-align: text-top;
 }
+
+#rating {
+	width: 40px;
+	text-align: center;
+}

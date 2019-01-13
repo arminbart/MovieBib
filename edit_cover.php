@@ -24,9 +24,7 @@
 		$session = get_php_param("s");
 		$nick = verify_session($session);
 
-		$coverfile = get_cover_filename($id);
-		if (!file_exists($coverfile))
-			$coverfile = "img/cover.png";
+		$coverfile = get_cover_filename($id, true, $nick);
 	?>
 </head>
 <body>
@@ -46,14 +44,14 @@
 			</td>
 		</tr>
 		<tr>
-			<td id="spacer_medium"></td>
+			<td id="spacer_medium"><?php echo get_cover_info($coverfile); ?></td>
 		</tr>
 		<tr>
 			<td>
 				<form method="post" action="save_cover.php<?php echo session_param($nick, $session, $id); ?>" enctype="multipart/form-data">
 					<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo get_php_param('cover_max_filesize'); ?>" />
 					<input type="file" accept="image/jpeg" name="image" id="image" />
-					<input type="submit" value='Save' onclick="return validateForm()"/>
+					<input type="submit" value='Speichern' onclick="return validateForm()"/>
         		</form>
 			</td>
 		</tr>
