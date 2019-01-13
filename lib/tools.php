@@ -2,7 +2,7 @@
 
 function debug()
 {
-	return get_php_param("debug") == "true";
+	return boolval(get_php_param("debug"));
 }
 
 function debug_out($msg, $important = true)
@@ -11,9 +11,19 @@ function debug_out($msg, $important = true)
 		return;
 
 	if ($important)
-		echo "<p style='color: #606060; font-size: 14'>";
+		echo "<p style='color: #606060; font-size: 12'>";
 	else
 		echo "<p style='color: #A0A0A0; font-size: 10'>";
+
+	echo $msg . "</p>";
+}
+
+function nondebug_out($msg, $title = false)
+{
+	if ($title)
+		echo "<p style='color: black; font-size: 18'>";
+	else
+		echo "<p style='color: black; font-size: 14'>";
 
 	echo $msg . "</p>";
 }

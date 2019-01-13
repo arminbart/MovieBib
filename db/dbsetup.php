@@ -6,10 +6,18 @@ function init_db()
 {
 	$con = new Connection();
 
-	init_tables($con);
-	init_data($con);
+	nondebug_out("Initialize MovieBib database", true);
 
-	$con->close();
+	try
+	{
+		init_tables($con);
+		init_data($con);
+		nondebug_out("MovieBib successfully initialized.", true);
+	}
+	finally
+	{
+		$con->close();
+	}
 }
 
 function init_tables($con)
@@ -61,7 +69,7 @@ function create_table($con, $file, $table, $maxretries)
 		if ($line == ")")
 		{
 			$con->execute($stmt);
-			debug_out("Table " . $table . " created.");
+			nondebug_out("Table " . $table . " created.");
 			break;
 		}
 	}
@@ -69,7 +77,7 @@ function create_table($con, $file, $table, $maxretries)
 
 function update_table($con, $file, $table, $maxretries)
 {
-	debug_out("Check table " . $table . "...");	
+	nondebug_out("Check table " . $table . "...");
 
 	while ($maxretries > 0 and !feof($file))
 	{
@@ -89,7 +97,7 @@ function update_table($con, $file, $table, $maxretries)
 		if (!$con->column_exists($table, $col))
 		{
 			$con->execute("ALTER TABLE " . $table . " ADD COLUMN " . $line);
-			debug_out("Added column " . $col . " to table " . $table . ".");
+			nondebug_out("Added column " . $col . " to table " . $table . ".");
 		}
 	}
 }
@@ -99,7 +107,7 @@ function init_data($con)
 	$maxretries = 1000;
 	$file = fopen("db/dbentries.sql", "r");
 
-	debug_out("Check database default entries...");
+	nondebug_out("Check database default entries...");
 
 	while ($maxretries > 0 and !feof($file))
 	{
