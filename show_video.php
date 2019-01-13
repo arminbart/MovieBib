@@ -98,7 +98,7 @@
 					</tr>
 					<tr>
 						<td colspan="2" id="title_small">Format</td>
-						<td colspan="1"><?php echo $row["Medium"] . ($row["Resolution"] != "" ? ", " . $row["Resolution"] : "") . (boolval($row["Cut"]) ? "" : "&nbsp;&nbsp;(ungeschnitten)"); ?></td>
+						<td colspan="1"><?php echo ($row["Medium"] == "BR" ? "Blu-ray" : $row["Medium"]) . ($row["Resolution"] != "" ? ", " . $row["Resolution"] : "") . (boolval($row["Cut"]) ? "" : "&nbsp;&nbsp;(ungeschnitten)"); ?></td>
 					</tr>
 					<tr>
 						<td colspan="2" id="title_small">Spieldauer</td>
