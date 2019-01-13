@@ -14,7 +14,6 @@
 		#hint {
 			font-size: 10;
 		}
-
 	</style>
 
 	<?php
@@ -276,11 +275,13 @@
 									<td colspan="5" id="spacer_small"></td>
 								</tr>
 								<tr>
+									<td id="rating" style="width: 150;"><input type="radio" name="rating0" value="0" <?php if (intval($row["Rating"]) == 0) { echo "checked"; } ?>></td>
 									<?php for ($i = 1; $i <= 5; $i++) { ?>
 									<td id="rating"><input type="radio" name="rating" value="<?php echo $i; ?>" <?php if ($row["Rating"] == $i) { echo "checked"; } ?>></td>
 									<?php } ?>
 								</tr>
 								<tr>
+									<td id="rating" style="width: 150;">(keine Bewertung)</td>
 									<td id="rating"><img src="img/star1.png"></td>
 									<td id="rating"><img src="img/star2.png"></td>
 									<td id="rating"><img src="img/star3.png"></td>
