@@ -120,7 +120,7 @@
 					<?php if ($row["Actors"] != "") { ?>
 					<tr>
 						<td colspan="1" id="title_small">mit</td>
-						<td colspan="2"><?php echo $row["Actors"]; ?></td>
+						<td colspan="2"><?php echo str_replace(";", ", ", $row["Actors"]); ?></td>
 					</tr>
 					<?php } ?>
 					<tr>
