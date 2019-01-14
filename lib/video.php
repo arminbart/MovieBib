@@ -59,13 +59,15 @@ class Video
 	function load()
 	{
 		$con = new Connection();
-
-		$result = $con->query("SELECT ID, Name FROM Genres ORDER BY ID");
+		$ps = $con->query(new SelectStatement("Genres", "ID, Name", null, "ID"));
+		$result = $ps->get_result();
 		while (($row = $result->fetch_assoc()) != null)
 			$this->genres[$row["ID"]] = $row["Name"];
 		$result->close();
+		$ps->close();
 
-		$result = $con->query("SELECT * FROM Videos WHERE ID = " . $this->id);
+		$ps = $con->query(new SelectStatement("Videos", "*", new Where("ID", $this->id)));
+		$result = $ps->get_result();
 		$row = $result->fetch_assoc();
 
 		if ($row == null)
@@ -106,7 +108,7 @@ class Video
 			$this->debug_dump();
 		}
 		$result->close();
-
+		$ps->close();
 		$con->close();
 	}
 
@@ -115,34 +117,34 @@ class Video
 		$con = new Connection();
 		$stmt = new UpdateStatement("Videos");
 
-		$stmt->addValue("Status",		$this->status);
-		$stmt->addValue("Rating",		$this->rating);
-		$stmt->addValue("Title",		$this->title);
-		$stmt->addValue("OrigTitle",	$this->origtitle);
-		$stmt->addValue("OtherTitles",	$this->othertitles);
-		$stmt->addValue("Predecessor",	$this->predecessor);
-		$stmt->addValue("Successor",	$this->successor);
-		$stmt->addValue("Country",		$this->country);
-		$stmt->addValue("Genre",		$this->genre);
-		$stmt->addValue("OtherGenres",	$this->othergenres);
-		$stmt->addValue("Lang",			$this->lang);
-		$stmt->addValue("Year",			$this->year);
-		$stmt->addValue("Duration",		$this->duration);
-		$stmt->addValue("Medium",		$this->medium);
-		$stmt->addValue("Resolution",	$this->resolution);
-		$stmt->addValue("Cut",			$this->cut);
-		$stmt->addValue("File",			$this->file);
-		$stmt->addValue("OrigFile",		$this->origfile);
-		$stmt->addValue("OrigLocation",	$this->origlocation);
-		$stmt->addValue("Info",			$this->info);
-		$stmt->addValue("Link",			$this->link);
-		$stmt->addValue("Trailer",		$this->trailer);
-		$stmt->addValue("Director",		$this->director);
-		$stmt->addValue("Actors",		$this->actors);
+		$stmt->add_value("Status",			$this->status);
+		$stmt->add_value("Rating",			$this->rating);
+		$stmt->add_value("Title",			$this->title);
+		$stmt->add_value("OrigTitle",		$this->origtitle);
+		$stmt->add_value("OtherTitles",		$this->othertitles);
+		$stmt->add_value("Predecessor",		$this->predecessor);
+		$stmt->add_value("Successor",		$this->successor);
+		$stmt->add_value("Country",			$this->country);
+		$stmt->add_value("Genre",			$this->genre);
+		$stmt->add_value("OtherGenres",		$this->othergenres);
+		$stmt->add_value("Lang",			$this->lang);
+		$stmt->add_value("Year",			$this->year);
+		$stmt->add_value("Duration",		$this->duration);
+		$stmt->add_value("Medium",			$this->medium);
+		$stmt->add_value("Resolution",		$this->resolution);
+		$stmt->add_value("Cut",				$this->cut);
+		$stmt->add_value("File",			$this->file);
+		$stmt->add_value("OrigFile",		$this->origfile);
+		$stmt->add_value("OrigLocation",	$this->origlocation);
+		$stmt->add_value("Info",			$this->info);
+		$stmt->add_value("Link",			$this->link);
+		$stmt->add_value("Trailer",			$this->trailer);
+		$stmt->add_value("Director",		$this->director);
+		$stmt->add_value("Actors",			$this->actors);
 
-		$stmt->setWhere("ID = '" . $this->id . "'");
+		$stmt->set_where(new Where("ID",	 $this->id));
 
-		$con->execute($stmt->stmt());
+		$con->execute($stmt);
 		$con->close();
 	}
 
@@ -153,8 +155,8 @@ class Video
 		$con = new Connection();
 		$stmt = new UpdateStatement("Videos");
 
-		$stmt->addValue("Watched", $watched);
-		$stmt->addValue("WatchCnt", $watchcnt);
+		$stmt->add_value("Watched", $watched);
+		$stmt->add_value("WatchCnt", $watchcnt);
 		$con->execute($stmt->stmt());
 		$con->close();
 	}

@@ -4,17 +4,30 @@ include_once 'db/dbconnect.php';
 
 function get_session($nick, $pass)
 {
+	if ($pass == "")
+	{
+		debug_out("Password empty.");
+		return null;
+	}
+
 	$con = new Connection();
 	$hash = md5($pass, false);
 
-	$id = $con->value("SELECT ID FROM Users WHERE Name = '" . $nick . "' AND (Pwd = '" . $pass . "' OR Pwd = '" . $hash . "')");
+	$where = new Where("Name", $nick);
+	$where->sub_where(new Where("Pwd", $pass, "OR", "Pwd", $hash));
+	$id = $con->value(new SelectStatement("Users", "ID", $where));
 
 	if ($id != "")
 	{
 		$session = 0;
-		while ($session == 0 or $con->value("SELECT count(*) FROM Users WHERE Session = '" . $session . "'") > 0)
+		while ($session == 0 or $con->value(new SelectStatement("Users", "count(*)", new Where("Session", $session))) > 0)
 			$session = mt_rand(100000, 999999);
-		$con->execute("UPDATE Users SET Login = now(), Session = " . $session . " WHERE ID = " . $id);
+
+		$stmt = new UpdateStatement("Users");
+		$stmt->add_value("Login", "now()", true);
+		$stmt->add_value("Session", $session);
+		$stmt->set_where(new Where("ID", $id));
+		$con->execute($stmt);
 	}
 	else
 	{
@@ -29,10 +42,11 @@ function verify_session($session)
 {
 	$nick = null;
 
-	if ($session != "")
+	if (intval($session) > 0)
 	{
 		$con = new Connection();
-		$result = $con->query("SELECT * FROM Users WHERE Session = '" . $session . "'");
+		$ps = $con->query(new SelectStatement("Users", "*", new Where("Session", $session)));
+		$result = $ps->get_result();
 
 		if (($row = $result->fetch_assoc()) != null)
 		{
@@ -40,8 +54,9 @@ function verify_session($session)
 			debug_out("Verify session of user " . $row["ID"] . ". Last login = " . $time);
 			$nick = $row["Name"];
 		}
-		
+
 		$result->close();
+		$ps->close();
 		$con->close();
 	}
 

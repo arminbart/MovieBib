@@ -1,5 +1,6 @@
 <?php
 
+include_once 'db/dbstatements.php';
 include_once 'lib/tools.php';
 
 class Connection
@@ -14,7 +15,7 @@ class Connection
 		$db   = get_php_param("db", "db/dbparams.txt");
 
 		if (starts_with($pwd, "**"))
-			exit("Database pwd starts with '**'. Please provide correct password!");
+			exit("Database pwd starts with '**'. Please provide correct password in db/dbparams.txt!");
 
 		$this->sqli = new mysqli($host, $user, $pwd, $db);
 
@@ -40,41 +41,47 @@ class Connection
 		}
 	}
 
-	// Executes SQL statement without result
-	function execute($stmt)
+	// Executes SQL and returns true, if successfull
+	function verify_sql($sql)
 	{
-		debug_out("SQL statement: " . $stmt, false);
+		debug_out("SQL statement: " . $sql, false);
 
-		if (!$this->sqli->query($stmt))
-			exit("Executing SQL statement failed: " . $stmt . "<br>" . $this->sqli->error);
-	}
-
-	// Executes SQL statement and returns true, if successfull
-	function verify($stmt)
-	{
-		debug_out("SQL statement: " . $stmt, false);
-
-		if ($this->sqli->query($stmt))
+		if ($this->sqli->query($sql))
 			return true;
 		else
 			return false;
 	}
-	
-	// Executes SQL query and returns mysqli_result
-	function query($stmt)
+
+	// Executes SQL without result
+	function execute_sql($sql)
 	{
-		debug_out("SQL query: " . $stmt, false);
+		debug_out("SQL statement: " . $sql, false);
 
-		if (!$this->sqli->real_query($stmt))
-			exit("Executing SQL query failed: " . $stmt . "<br>" . $this->sqli->error);
+		if (!$this->sqli->query($sql))
+			exit("Executing SQL statement failed: " . $sql . "<br>Error " . $this->sqli->errno . ": " . $this->sqli->error);
+	}
 
-		return $this->sqli->use_result();
+	// Executes SQL statement without result
+	function execute(Statement $stmt)
+	{
+		debug_out("SQL statement: " . $stmt->sql(true), false);
+
+		$stmt->execute($this->sqli)->close();
+	}
+
+	// Executes SQL query and returns prepared statement (caller must call get_result() and then close() on the ps).
+	function query(Statement $stmt)
+	{
+		debug_out("SQL query: " . $stmt->sql(true), false);
+
+		return $stmt->execute($this->sqli);
 	}
 
 	// Executes SQL query and returns single value
-	function value($stmt)
+	function value(Statement $stmt)
 	{
-		$result = $this->query($stmt);
+		$ps = $this->query($stmt);
+		$result = $ps->get_result();
 		$value = null;
 
 		if ($result !== null)
@@ -85,12 +92,13 @@ class Connection
 			$result->close();
 		}
 
+		$ps->close();
 		return $value;
 	}
 
 	function table_exists($table)
 	{
-		if ($this->verify("SELECT count(*) FROM " . $table . " WHERE 0"))
+		if ($this->verify_sql("SELECT count(*) FROM " . $table . " WHERE 0"))
 			return true;
 
 		debug_out("Table " . $table . " does not exist.");
@@ -99,7 +107,7 @@ class Connection
 
 	function column_exists($table, $col)
 	{
-		if ($this->verify("SELECT " . $col . " FROM " . $table . " LIMIT 1"))
+		if ($this->verify_sql("SELECT " . $col . " FROM " . $table . " LIMIT 1"))
 			return true;
 
 		debug_out("Column " . $table . "." . $col . " does not exist.");
@@ -108,7 +116,7 @@ class Connection
 
 	function entry_exists($table, $col, $val)
 	{
-		if ($this->value("SELECT count(*) FROM " . $table . " WHERE " . $col . " = '" . $val . "'"))
+		if ($this->value(new SelectStatement($table, "count(*)", new Where($col, $val))))
 			return true;
 
 		debug_out("Entry '" . $val . "' in table " . $table . " not found.");

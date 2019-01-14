@@ -36,23 +36,23 @@ function add_video($con)
 	debug_out("type: " . $type);
 	debug_out("resolution: " . $res);
 
-	if ($con->value("SELECT count(*) FROM Videos WHERE File = '" . $filename . "' OR OrigFile = '" . $filename . "'"))
+	if ($con->value(new SelectStatement("Videos", "count(*)", new Where("File", $filename, "OR", "OrigFile", $filename))))
 		throw new ApiException("Video '" . $filename . "' already added.", true);
 
 	$stmt = new InsertStatement("Videos");
-	$stmt->addValue("Title",		$title);
-	$stmt->addValue("Lang",			$lang);
-	$stmt->addValue("File",			$filename);
-	$stmt->addValue("OrigFile",		$filename);
-	$stmt->addValue("OrigLocation",	$location);
-	$stmt->addValue("Cut",			$cut);
-	$stmt->addValue("Medium",		$type);
-	$stmt->addValue("Resolution",	$res);
+	$stmt->add_value("Title",			$title);
+	$stmt->add_value("Lang",			$lang);
+	$stmt->add_value("File",			$filename);
+	$stmt->add_value("OrigFile",		$filename);
+	$stmt->add_value("OrigLocation",	$location);
+	$stmt->add_value("Cut",				$cut);
+	$stmt->add_value("Medium",			$type);
+	$stmt->add_value("Resolution",		$res);
 	if ($genre != "")
-		$stmt->addValue("Genre",	$genre);
+		$stmt->add_value("Genre",		$genre);
 
-	$con->execute($stmt->stmt());
-	$id = $con->value("SELECT max(ID) FROM Videos");
+	$con->execute($stmt);
+	$id = $con->value(new SelectStatement("Videos", "max(ID)"));
 
 	return "Added video $id: $title";
 }
@@ -107,9 +107,9 @@ function extract_genre($con, $location)
 	{
 		$genre = substr($location, $pos + 1);
 		if (genre_exists($con, $genre))
-			return $con->value("SELECT ID FROM Genres WHERE ID = '" . $genre . "'"); // Fetch Genre in correct upper-lower-case
+			return $con->value(new SelectStatement("Genres", "ID", new Where("ID", $genre))); // Fetch Genre in correct upper-lower-case
 		else if ($con->entry_exists("Genres", "Name", $genre))
-			return $con->value("SELECT ID FROM Genres WHERE Name = '" . $genre . "'"); // Fetch Genre by name
+			return $con->value(new SelectStatement("Genres", "ID", new Where("Name", $genre)));  // Fetch Genre by name
 	}
 
 	return null;

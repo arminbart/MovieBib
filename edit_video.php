@@ -26,9 +26,11 @@
 		$nick = verify_session($session);
 
 		$con = new Connection();
-		$result = $con->query("SELECT *, (SELECT Name FROM Genres WHERE ID = Genre) AS GenreName FROM Videos WHERE ID = " . $id);
+		$ps = $con->query(new SelectStatement("Videos", "*, (SELECT Name FROM Genres WHERE ID = Genre) AS GenreName", new Where("ID", $id)));
+		$result = $ps->get_result();
 		$row = $result->fetch_assoc();
 		$result->close();
+		$ps->close();
 		$con->close();
 
 		$coverfile = get_cover_filename($id, true, $nick);
@@ -104,7 +106,9 @@
 								<tr id="text_small">
 								<?php 
 									$con = new Connection();
-									$result = $con->query("SELECT * FROM Genres ORDER BY Name");
+									$stmt = new SelectStatement("Genres", "*", null, "Name");
+									$ps = $con->query($stmt);
+									$result = $ps->get_result();;
 									$cnt = 0;
 
 									while (($row2 = $result->fetch_assoc()) != null)
@@ -122,7 +126,8 @@
 									echo "</td>";
 									$result->close();
 
-									$result = $con->query("SELECT * FROM Genres ORDER BY Name");
+									$ps = $con->query($stmt);
+									$result = $ps->get_result();;
 									$cnt = 0;
 									$others = explode(";", $row["OtherGenres"]);
 
@@ -144,6 +149,7 @@
 									}
 									echo "</td>";
 									$result->close();
+									$ps->close();
 									$con->close();
 								?>
 								</tr>		

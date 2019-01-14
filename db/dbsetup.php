@@ -68,7 +68,7 @@ function create_table($con, $file, $table, $maxretries)
 		$stmt .= trim($line) . " ";
 		if ($line == ")")
 		{
-			$con->execute($stmt);
+			$con->execute_sql($stmt);
 			nondebug_out("Table " . $table . " created.");
 			break;
 		}
@@ -96,7 +96,7 @@ function update_table($con, $file, $table, $maxretries)
 
 		if (!$con->column_exists($table, $col))
 		{
-			$con->execute("ALTER TABLE " . $table . " ADD COLUMN " . $line);
+			$con->execute_sql("ALTER TABLE " . $table . " ADD COLUMN " . $line);
 			nondebug_out("Added column " . $col . " to table " . $table . ".");
 		}
 	}
@@ -134,7 +134,7 @@ function check_entry($con, $line)
 
 	if (!$con->entry_exists($table, $col, $val))
 	{
-		$con->execute($line);
+		$con->execute_sql($line);
 		debug_out("Inserted value '" . $val. "' in table " . $table . ".");
 	}
 }

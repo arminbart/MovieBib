@@ -18,7 +18,8 @@
 		$nick = verify_session($session);
 
 		$con = new Connection();
-		$result = $con->query("SELECT *, (SELECT Name FROM Genres WHERE ID = Genre) AS GenreName FROM Videos WHERE ID = " . $id);
+		$ps = $con->query(new SelectStatement("Videos", "*, (SELECT Name FROM Genres WHERE ID = Genre) AS GenreName", new Where("ID", $id)));
+		$result = $ps->get_result();
 		$row = $result->fetch_assoc();
 
 		$coverfile = get_cover_filename($id, true, $nick);
@@ -149,3 +150,9 @@
 	</table>
 </body>
 </html>
+
+<?php
+	$result->close();
+	$ps->close();
+	$con->close();
+?>

@@ -80,7 +80,9 @@
 		<tr>
 			<td colspan="3" id="title_small" style="font-size: 14; text-align: justify;">
 			<?php
-				$result = $con->query("SELECT * FROM Genres ORDER BY Name");
+				$stmt = new SelectStatement("Genres", "*", null, "Name");
+				$ps = $con->query($stmt);
+				$result = $ps->get_result();;
 				$first = true;
 
 				while (($row = $result->fetch_assoc()) != null)
@@ -92,6 +94,7 @@
 					echo $row["Name"];
 				}
 				$result->close();
+				$ps->close();
 			?>
 			</td>
 		</tr>
@@ -100,8 +103,9 @@
 		</tr>
 		<?php
 			if ($search != "")
-				$where = " WHERE Title LIKE '%" . $search . "%' ";
-			$result = $con->query("SELECT * FROM Videos " . $where . " ORDER BY CASE WHEN strcmp(Title, 'A') >= 0 AND strcmp(Title, 'ZZZ') <= 0 THEN 0 ELSE 1 END, Title");
+				$where = Where::from_sql("Title LIKE '%" . str_replace("'", "''", $search) . "%' ");
+			$ps = $con->query(new SelectStatement("Videos", "*", $where, "CASE WHEN strcmp(Title, 'A') >= 0 AND strcmp(Title, 'ZZZ') <= 0 THEN 0 ELSE 1 END, Title"));
+			$result = $ps->get_result();
 			$letter = "";
 			$col = 1;
 
@@ -151,6 +155,7 @@
 				echo "<td></td></tr>";
 
 			$result->close();
+			$ps->close();
 		?>
 	</table>
 </td>
