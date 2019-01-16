@@ -22,6 +22,10 @@ table, th, td {
 	/*text-align: center;*/
 }
 
+input {
+	border-radius: 7px;
+}
+
 a {
 	text-decoration: none;
 }

@@ -38,8 +38,9 @@
 					<tr>
 						<td style="width: 1050; text-align: center;">
 							<form method="post" action="index.php<?php echo session_param($nick, $session)?>" enctype="multipart/form-data">
-								<input type="text" name="search" size="75" value="<?php echo $search; ?>"/>
-								<input type="submit" value='Suche'/>
+								<input type="text" name="search" size="75" style="font-size: 16; background: #DDDDDD; padding: 5;" value="<?php echo $search; ?>"/>
+								&nbsp;&nbsp;
+								<input type="submit" style="font-size: 14; background: white;" value='Suche'/>
 							</form>
 						</td>
 					</tr>
