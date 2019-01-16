@@ -2,7 +2,7 @@
 
 function debug()
 {
-	return boolval(str_replace("false", "", get_php_param("debug")));
+	return bool_php_param("debug");
 }
 
 function debug_out($msg, $important = true)
@@ -47,6 +47,11 @@ function strpos_regex($string, $regex)
 }
 
 $PHP_PARAMS = array();
+
+function bool_php_param($name, $paramfile = "lib/params.txt")
+{
+	return boolval(str_replace("false", "", get_php_param($name)));
+}
 
 function get_php_param($name, $paramfile = "lib/params.txt")
 {

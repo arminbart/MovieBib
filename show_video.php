@@ -16,6 +16,7 @@
 		$id = get_php_param("id");
 		$session = get_php_param("s");
 		$nick = verify_session($session);
+		$info = bool_php_param("info");
 
 		$con = new Connection();
 		$ps = $con->query(new SelectStatement("Videos", "*, (SELECT Name FROM Genres WHERE ID = Genre) AS GenreName", new Where("ID", $id)));
@@ -64,12 +65,19 @@
 						<td colspan="4" id="text_small"><?php echo $row["Info"] != "" ? $row["Info"] : "Keine Beschreibung vorhanden"; ?></td>
 					</tr>
 					<tr>
-						<td colspan="4" id="spacer_medium" style="text-align: right;"><?php echo get_cover_info($coverfile); ?></td>
+						<td colspan="4" id="spacer_medium" style="text-align: right; font-size: 18;">
+							<?php
+								if ($info)
+									echo get_cover_info($coverfile);
+								else
+									echo "<a href='show_video.php" . session_param($nick, $session, $id) . "&info=1'>...</a>";
+							?>
+						</td>
 					</tr>
 					<tr>
 						<td colspan="2" id="title_small">Alternativtitel</td>
 						<td colspan="1"><?php echo $row["OtherTitles"] != "" ? str_replace(";","<br>", $row["OtherTitles"]) : "- / -"; ?></td>
-						<td rowspan="12" style="vertical-align:top;">
+						<td rowspan="14" style="vertical-align:top;">
 							<table style="margin-right: 0;">
 								<tr>
 									<td style="width: 40px;">&nbsp;</td>
@@ -109,6 +117,20 @@
 						<td colspan="2" id="title_small">Dateiname</td>
 						<td colspan="1"><?php echo $row["File"]; ?></td>
 					</tr>
+					<?php if ($info) { ?>
+					<tr>
+						<td colspan="2" id="title_small">urspr. Dateiname</td>
+						<td colspan="1"><?php echo $row["OrigFile"]; ?></td>
+					</tr>
+					<tr>
+						<td colspan="2" id="title_small">urspr. Ablage</td>
+						<td colspan="1"><?php echo $row["OrigLocation"]; ?></td>
+					</tr>
+					<tr>
+						<td colspan="2" id="title_small">Phonetischer Code</td>
+						<td colspan="1"><?php echo $row["Phonetic"]; ?></td>
+					</tr>
+					<?php } ?>
 					<tr>
 						<td colspan="3" id="spacer_large"></td>
 					</tr>
