@@ -19,12 +19,11 @@ if ($session != "")
 	for ($i = 1; count($params) > $i + 1; $i += 2)
 		$forward .= "&" . $params[$i] . "=" . $params[$i + 1];
 
-	header("Location: http://video.bartmail.de/" . get_forward_page($from, $session));
+	forward(get_forward_page($from, $session));
 }
 else
 {
-	header("Location: http://video.bartmail.de/login.php?from=" . $from);
+	forward("login.php?from=" . $from);
 }
-exit();
 
 ?>

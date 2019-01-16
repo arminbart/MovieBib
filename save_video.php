@@ -11,7 +11,7 @@ $nick = verify_session($session);
 
 if ($nick == null)
 {
-	header("Location: http://video.bartmail.de/login.php");
+	forward("login.php");
 }
 else
 {
@@ -48,11 +48,9 @@ else
 		$video->debug_dump();
 	$video->save();
 
-	if (!debug())
-		header("Location: http://video.bartmail.de/show_video.php" . session_param($nick, $session, $id));
+	forward("show_video.php" . session_param($nick, $session, $id));
 }
 
-exit();
 
 function get_medium($type, $filename)
 {

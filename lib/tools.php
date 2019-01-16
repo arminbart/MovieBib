@@ -2,7 +2,7 @@
 
 function debug()
 {
-	return boolval(get_php_param("debug"));
+	return boolval(str_replace("false", "", get_php_param("debug")));
 }
 
 function debug_out($msg, $important = true)
@@ -114,6 +114,15 @@ function concat(array $vals, $separator = ";")
 			$result .= ($result == "" ? "" : $separator) . trim($val);
 
 	return $result;
+}
+
+function forward($page)
+{
+	if (debug())
+		echo "Forward to <a href='$page'>$page</a>";
+	else
+		header("Location: http://" . get_php_param("domain") . "/" . $page);
+	exit();
 }
 
 ?>

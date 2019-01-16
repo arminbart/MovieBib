@@ -14,11 +14,11 @@ $filename = get_cover_filename($id);
 
 if ($nick == null)
 {
-	header("Location: http://video.bartmail.de/login.php");
+	forward("login.php");
 }
 else if ($tmpname == "")
 {
-	header("Location: http://video.bartmail.de/edit_cover.php" . session_param($nick, $session, $id) . "&err=no_file");
+	forward("edit_cover.php" . session_param($nick, $session, $id) . "&err=no_file");
 }
 else
 {
@@ -66,9 +66,7 @@ else
 		imagedestroy($newimg);
 	}
 
-	header("Location: http://video.bartmail.de/show_video.php" . session_param($nick, $session, $id) . "&no_cache=1");
+	forward("show_video.php" . session_param($nick, $session, $id) . "&no_cache=1");
 }
-
-exit();
 
 ?>
