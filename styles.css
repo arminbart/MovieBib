@@ -26,10 +26,10 @@ a {
 	text-decoration: none;
 }
 a:link {
-	color: white;
+	color: #666666;
 } /* unvisited link */
 a:visited {
-	color: white;
+	color: #666666;
 } /* visited link */
 a:hover {
 	color: #440000;

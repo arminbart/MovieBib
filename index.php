@@ -8,15 +8,6 @@
 		table, th, td {
 			/*border: 1px solid white;*/
 		}
-		a:link {
-			color: #666666;
-		}
-		a:visited {
-			color: #666666;
-		}
-		a:hover {
-			color: #440000;
-		}
 	</style>
 
 	<?php
