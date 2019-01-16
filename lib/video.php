@@ -1,6 +1,7 @@
 <?php
 
 include_once 'db/dbstatements.php';
+include_once 'lib/phonetic.php';
 
 class Video
 { //      [Status]              [set by MovieButler] [set by MovieBib]
@@ -141,6 +142,7 @@ class Video
 		$stmt->add_value("Trailer",			$this->trailer);
 		$stmt->add_value("Director",		$this->director);
 		$stmt->add_value("Actors",			$this->actors);
+		$stmt->add_value("Phonetic",		phonetic($this->title));
 
 		$stmt->set_where(new Where("ID",	 $this->id));
 

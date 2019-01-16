@@ -12,6 +12,7 @@
 
 	<?php
 		include_once 'db/dbconnect.php';
+		include_once 'lib/phonetic.php';
 		include_once 'lib/session.php';
 
 		$session = get_php_param("s");
@@ -95,7 +96,11 @@
 		</tr>
 		<?php
 			if ($search != "")
-				$where = Where::from_sql("Title LIKE '%" . str_replace("'", "''", $search) . "%' ");
+			{
+				$where = new Where(null, null, "OR");
+				$where->sub_where("Title LIKE '%" . str_replace("'", "''", $search) . "%' ");
+				$where->sub_where("Phonetic LIKE '%" . phonetic($search) . "%' ");
+			}
 			$ps = $con->query(new SelectStatement("Videos", "*", $where, "CASE WHEN strcmp(Title, 'A') >= 0 AND strcmp(Title, 'ZZZ') <= 0 THEN 0 ELSE 1 END, Title"));
 			$result = $ps->get_result();
 			$letter = "";

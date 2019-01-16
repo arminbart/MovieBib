@@ -39,6 +39,7 @@ CREATE TABLE Videos (
 	Trailer TEXT,
 	Director VARCHAR(64),
 	Actors VARCHAR(1024),
+	Phonetic VARCHAR(32),
 	Watched TIMESTAMP,
 	WatchCnt INT
 )
