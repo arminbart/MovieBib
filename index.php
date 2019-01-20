@@ -8,6 +8,19 @@
 		table, th, td {
 			/*border: 1px solid white;*/
 		}
+
+		a.filter:link {
+			color: white;
+		} /* unvisited link */
+		a.filter:visited {
+			color: white;
+		} /* visited link */
+		a.filter:hover {
+			color: #440000;
+		} /* mouse over link */
+		a.filter:active {
+			color: #440000;
+		} /* selected link */
 	</style>
 
 	<?php
@@ -57,11 +70,11 @@
 					<tr>
 						<?php for ($i = 65; $i < 91; $i++) { ?>
 						<td style="width: 30px;">
-							<?php echo chr($i); ?>
+							<a href="index.php#<?php echo strtolower(chr($i)); ?>" class="filter"><?php echo chr($i); ?></a>
 						</td>
 						<?php } ?>
 						<td style="width: 30px;">
-							0-9
+							<a href="index.php#misc" class="filter">0-9</a>
 						</td>
 					</tr>
 				</table>
@@ -124,7 +137,7 @@
 			<td colspan="3" id="spacer_medium"></td>
 		</tr>
 		<tr>
-			<td colspan="3" id="title_large"><?php echo $letter; ?></td>
+			<td colspan="3" id="title_large"><a id="<?php $l = strtolower($letter); echo ($l < "a" or $l > "z") ? "misc" : $l; ?>"><?php echo $letter; ?></a></td>
 		</tr>
 		<?php
 				}
