@@ -36,18 +36,36 @@ function process_cover($id, $tmpname)
 	$maxw = get_php_param("cover_max_width");
 	$maxh = get_php_param("cover_max_height");
 
+	debug_out("Uploaded image '$tmpname' ($w x $h)");
+	debug_out("Maximum cover image size: $maxw x $maxh", false);
+
 	if ($w > $maxw or $h > $maxh)
 	{
 		$oldimg = imagecreatefromjpeg($filename);
 		$newimg = $oldimg;
 
-		if ($w > $maxw and $h > $maxh)
+		/*
+		 * cover_crop = false: Image gets shrinked until all dimensions (widht and height) fit within maximum range.
+		 *          advantage: Images don't get cropped.
+		 *       disadvantage: Usually one dimension becomes smaller than necessary.
+		 *
+		 * cover_crop = true:  Image gets only shrinked until the smaller dimension fits within maxium range.
+		 *                     Then the other dimension gets cropped to fit in its maximum range also 
+		 *          advantage: Images are usually in the desired size (unless original image is already smaller).
+		 *       disadvantage: Images lose some content because they get cropped.
+		 */
+		$crop = bool_php_param("cover_crop");
+		debug_out("cover_crop = " . ($crop ? "on" : "off"), false);
+
+		if (!$crop or ($w > $maxw and $h > $maxh))
 		{ // Width and Height too large -> Zoom
 			$factorw = $w / $maxw;
 			$factorh = $h / $maxh;
-			$factor = $factorw < $factorh ? $factorh : $factorw;
+			$factor = $factorw < $factorh ? ($crop ? $factorw : $factorh) : ($crop ? $factorh : $factorw);
 			$neww = intval($w / $factor + 0.01);
 			$newh = intval($h / $factor + 0.01);
+
+			debug_out("Image too large ($w x $h) -> shrink to $neww x $newh");
 
 			$newimg = imagecreatetruecolor($neww, $newh);
 			imagecopyresampled($newimg, $oldimg, 0, 0, 0, 0, $neww, $newh, $w, $h);
@@ -57,18 +75,20 @@ function process_cover($id, $tmpname)
 			$w = $neww;
 			$h = $newh;
 		}
-/*
-		if ($w > $maxw or $h > $maxh)
+
+		if ($crop and ($w > $maxw or $h > $maxh))
 		{ // Width or Height (still) too large -> Crop
-			$offsetx = $neww > $maxw ? ($neww - $maxw) / 2 : 0;
-			$offsety = $newh > $maxh ? ($newh - $maxh) / 2 : 0;
+			$offsetx = $w > $maxw ? ($w - $maxw) / 2 : 0;
+			$offsety = $h > $maxh ? ($h - $maxh) / 2 : 0;
+
+			debug_out("Image (still) too large ($w x $h) -> crop to $maxw x $maxh");
+			debug_out("Offset: " . $offsetx . " x " . $offsety, false);
+			debug_out("Range " . min($w, $maxw) . " x " . min($h, $maxh), false);
+
 			$newimg = imagecrop($oldimg, array('x' => $offsetx, 'y' => $offsety, 'width' => min($w, $maxw), 'height' => min($h, $maxh)));
 			imagedestroy($oldimg);
-
-			echo "<br>offset " . $offsetx . " x " . $offsety;
-			echo "<br>range " . min($neww, $maxw) . " x " . min($newh, $maxh);
 		}
-*/
+
 		imageconvolution($newimg, array(array(-1, -1, -1), array(-1, 16, -1), array(-1, -1, -1)), 8, 0); // Sharpen image
 		imagejpeg($newimg, $filename);
 
