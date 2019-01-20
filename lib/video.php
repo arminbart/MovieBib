@@ -92,8 +92,8 @@ class Video
 			$this->genre		= $row["Genre"];
 			$this->othergenres	= $row["OtherGenres"];
 			$this->lang			= $row["Lang"];
-			$this->year			= intval($row["Year"]);
-			$this->duration		= intval($row["Duration"]);
+			$this->year			= intval($row["Year"]) > 0 ? intval($row["Year"]) : null;
+			$this->duration		= intval($row["Duration"]) > 0 ? intval($row["Duration"]) : null;
 			$this->medium		= $row["Medium"];
 			$this->resolution	= $row["Resolution"];
 			$this->cut			= boolval($row["Cut"]);

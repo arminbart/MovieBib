@@ -29,8 +29,8 @@ else
 	$video->genre = get_http_param("genre");
 	$video->othergenres = get_concat_param("othergenre", 18);
 	$video->lang = get_http_param("lang");
-	$video->year = intval(get_http_param("year"));
-	$video->duration = intval(get_http_param("duration"));
+	$video->year = intval(get_http_param("year")) > 0 ? intval(get_http_param("year")) : null;
+	$video->duration = intval(get_http_param("duration")) > 0 ? intval(get_http_param("duration")) : null;
 	$video->medium = get_medium(get_http_param("medium"), get_http_param("file"));
 	$video->resolution = strtoupper(get_http_param("resolution"));
 	$video->cut = boolval(get_http_param("cut"));

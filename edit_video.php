@@ -95,7 +95,7 @@
 							<table style="width: 100%;">
 								<tr>
 									<td id="title_small">Produktionsjahr</td>
-									<td><input type="text" name="year" maxlength="4" style="width: 100%;" value="<?php echo $row['Year'];?>"></td>
+									<td><input type="text" name="year" maxlength="4" style="width: 100%;" value="<?php echo intval($row['Year']) > 0 ? $row['Year'] : ""; ?>"></td>
 									<td id="title_small" style="text-align: right;">Produktionsland&nbsp;&nbsp;</td>
 									<td><input type="text" name="country" size="20" style="width: 100%;" value="<?php echo $row['Country'];?>"></td>
 									<td colspan="2"><a href="https://filmdenken.de/sonst/land.htm"><span id="hint">&nbsp;(z.B. D/I/F, siehe L&auml;nderk&uuml;rzel)</span></a></td>
@@ -232,7 +232,7 @@
 					</tr>
 					<tr>
 						<td id="title_small" style="margin-left: 0;">Spieldauer</td>
-						<td colspan="3"><input type="text" name="duration" size="15" maxlength="4" value="<?php echo $row['Duration'];?>">&nbsp;min</td>
+						<td colspan="3"><input type="text" name="duration" size="15" maxlength="4" value="<?php echo intval($row['Duration']) > 0 ? $row['Duration'] : ""; ?>">&nbsp;min</td>
 					</tr>
 					<tr>
 						<td id="title_small">Dateiname</td>
