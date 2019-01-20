@@ -2,12 +2,6 @@
 <head>
 	<link rel="stylesheet" href="styles.css">
 
-	<style>
-		img {
-			float: right;
-		}
-	</style>
-
 	<?php
 		include_once 'db/dbconnect.php';
 		include_once 'lib/session.php';
@@ -25,6 +19,16 @@
 
 		$coverfile = get_cover_filename($id, true, $nick);
 	?>
+
+	<style>
+		table, th, td {
+			<?php if (debug()) { echo "border: 1px solid white;"; } ?>
+		}
+
+		img {
+			float: right;
+		}
+	</style>
 
 	<title>MovieBib - <?php echo $row["Title"]; ?></title>
 

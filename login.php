@@ -21,6 +21,12 @@
 		include_once 'lib/tools.php';
 		include_once 'lib/videohelpers.php';
 	?>
+
+	<style>
+		table, th, td {
+			<?php if (debug()) { echo "border: 1px solid white;"; } ?>
+		}
+	</style>
 </head>
 <body>
 	<table>

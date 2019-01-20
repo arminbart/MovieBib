@@ -2,20 +2,6 @@
 <head>
 	<link rel="stylesheet" href="styles.css">
 
-	<style>
-		body {
-			vertical-align: middle;
-		}
-
-		#title_small, #title_medium, #title_large {
-			vertical-align: middle;
-		}
-
-		#hint {
-			font-size: 10;
-		}
-	</style>
-
 	<?php
 		include 'db/dbconnect.php';
 		include 'lib/session.php';
@@ -35,6 +21,24 @@
 
 		$coverfile = get_cover_filename($id, true, $nick);
 	?>
+
+	<style>
+		body {
+			vertical-align: middle;
+		}
+
+		table, th, td {
+			<?php if (debug()) { echo "border: 1px solid white;"; } ?>
+		}
+
+		#title_small, #title_medium, #title_large {
+			vertical-align: middle;
+		}
+
+		#hint {
+			font-size: 10;
+		}
+	</style>
 
 	<title>MovieBib - <?php echo $row["Title"]; ?></title>
 </head>

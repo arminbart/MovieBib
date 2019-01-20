@@ -26,6 +26,12 @@
 
 		$coverfile = get_cover_filename($id, true, $nick);
 	?>
+
+	<style>
+		table, th, td {
+			<?php if (debug()) { echo "border: 1px solid white;"; } ?>
+		}
+	</style>
 </head>
 <body>
 	<table style="text-align: center;">

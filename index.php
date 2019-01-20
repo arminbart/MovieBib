@@ -4,9 +4,21 @@
 
 	<link rel="stylesheet" href="styles.css">
 
+	<?php
+		include_once 'db/dbconnect.php';
+		include_once 'lib/phonetic.php';
+		include_once 'lib/session.php';
+
+		$session = get_php_param("s");
+		$nick = verify_session($session);
+
+		$search = get_php_param("search");
+		$con = new Connection();
+	?>
+
 	<style>
 		table, th, td {
-			/*border: 1px solid white;*/
+			<?php if (debug()) { echo "border: 1px solid white;"; } ?>
 		}
 
 		a.filter:link {
@@ -22,18 +34,6 @@
 			color: #440000;
 		} /* selected link */
 	</style>
-
-	<?php
-		include_once 'db/dbconnect.php';
-		include_once 'lib/phonetic.php';
-		include_once 'lib/session.php';
-
-		$session = get_php_param("s");
-		$nick = verify_session($session);
-
-		$search = get_php_param("search");
-		$con = new Connection();
-	?>
 </head>
 <body>
 	<table>
