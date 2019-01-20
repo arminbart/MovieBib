@@ -265,6 +265,7 @@
 						<td colspan="4" id="spacer_small"></td>
 					</tr>
 					<tr>
+						<?php if ($row["Actors"] != "") { ?>
 						<td rowspan="7" id="title_small" style="vertical-align: text-top;">Schauspieler</td>
 						<?php 
 							$actors = explode(";", $row["Actors"]);
@@ -281,7 +282,15 @@
 								else
 									echo "</tr>";
 							}
+						} else {
 						?>
+						<td id="title_small" style="vertical-align: text-top;">Schauspieler</td>
+						<td colspan="5">
+							<input type="text" name="actors" maxlength="1024" style="width: 100%"><br>
+							<input type="hidden" name="simple_actors" value="1">
+							<div id="text_small">(mehrere Schauspieler als Komma-getrennte Liste erfassen)</div>
+						</td>
+						<?php } ?>
 					<tr>
 						<td colspan="6" id="spacer_large" style="color: black;">This text is here just to give the browser a hint that it should use a certain minimum width if possible. A simple form of res-pon-sive-ness if you will.</td>
 					</tr>

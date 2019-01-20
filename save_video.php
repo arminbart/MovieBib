@@ -40,7 +40,9 @@ else
 	$video->link = get_http_param("link");
 	$video->trailer = get_http_param("trailer");
 	$video->director = get_http_param("director");
-	$video->actors = get_concat_param("actor", 21);
+	$video->actors = boolval(get_http_param("simple_actors")) ? comma_to_semicolon(get_http_param("actors")) : get_concat_param("actor", 21);
+
+	debug_out("simple_actors = " . (boolval(get_http_param("simple_actors")) ? "on" : "off"), false);
 
 	if (intval($video->status) == Video::enlisted)
 		$video->status = Video::edited;
@@ -55,6 +57,17 @@ else
 	forward("show_video.php" . $session->param($id) . "&no_cache=1");
 }
 
+function comma_to_semicolon($text)
+{
+	$result = array();
+	$vals = explode(",", $text);
+
+	foreach ($vals as $val)
+		if (trim($val) != "")
+			$result[] = trim($val);
+
+	return concat($result);
+}
 
 function get_medium($type, $filename)
 {
