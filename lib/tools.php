@@ -60,7 +60,7 @@ function get_php_param($name, $paramfile = "lib/params.txt")
 	$maxretries = 100;
 	$value = get_http_param($name);
 
-	if ($value == "")
+	if ($value == "" and isset($PHP_PARAMS[$paramfile . "#" . $name]))
 		$value = $PHP_PARAMS[$paramfile . "#" . $name];
 
 	if ($value == "")
@@ -88,9 +88,12 @@ function get_php_param($name, $paramfile = "lib/params.txt")
 
 function get_http_param($name)
 {
-	$value = trim($_GET[$name]);
+	$value = null;
 
-	if ($value == "")
+	if (isset($_GET[$name]))
+		$value = trim($_GET[$name]);
+
+	if ($value == "" and isset($_POST[$name]))
 		$value = trim($_POST[$name]);
 
 	return $value;
