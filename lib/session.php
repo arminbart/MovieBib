@@ -10,6 +10,7 @@ function get_session($nick, $pass)
 		return null;
 	}
 
+	$session = null;
 	$con = new Connection();
 	$hash = md5($pass, false);
 

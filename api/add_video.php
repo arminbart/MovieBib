@@ -29,7 +29,6 @@ function add_video($con)
 
 	debug_out("name: " . $title);
 	debug_out("filename: " . $filename);
-	debug_out("newname: " . $name . "." . strtolower($type));
 	debug_out("location: " . $location);
 	debug_out("language: " . $lang);
 	debug_out("cut: " . $cut);

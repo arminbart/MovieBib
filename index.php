@@ -95,6 +95,7 @@
 			<td colspan="3" id="spacer_medium"></td>
 		</tr>
 		<?php
+			$where = null;
 			if ($search != "")
 			{
 				$where = new Where(null, null, "OR");
