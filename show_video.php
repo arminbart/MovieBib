@@ -8,8 +8,7 @@
 		include_once 'lib/videohelpers.php';
 
 		$id = get_php_param("id");
-		$session = get_php_param("s");
-		$nick = verify_session($session);
+		$session = Session::get();
 		$info = bool_php_param("info");
 
 		$con = new Connection();
@@ -17,7 +16,7 @@
 		$result = $ps->get_result();
 		$row = $result->fetch_assoc();
 
-		$coverfile = get_cover_filename($id, true, $nick);
+		$coverfile = get_cover_filename($id, $session);
 	?>
 
 	<style>
@@ -43,17 +42,17 @@
 			<td style="width: 96%;">
 				<table>
 					<tr>
-						<td style="width:  5%;"><a href="index.php<?php echo session_param($nick, $session); ?>">&lt;</a></td>
+						<td style="width:  5%;"><a href="index.php<?php echo $session->param(); ?>">&lt;</a></td>
 						<td style="width: 10%;">&nbsp;</td>
 						<td style="width: 60%;">&nbsp;</td>
-						<td style="width: 25%;text-align: right;"><?php echo $nick != "" ? $nick : '<a href="login.php?from=show_video;id;' . $id . '">Login</a>'; ?></td>
+						<td style="width: 25%;text-align: right;"><?php echo $session->valid() ? $session->nick() : '<a href="login.php?from=show_video;id;' . $id . '">Login</a>'; ?></td>
 					</tr>
 					<tr>
 						<td colspan="4" id="title_large"><?php echo $row["Title"] . " [" . ($row["Lang"] == "de" ? "dt" : $row["Lang"]) . ".]"; ?><hr></td>
 					</tr>
 					<tr>
 						<td colspan="3" id="title_medium"><?php echo ($row["Country"] != "" ? $row["Country"] : "(Produktionsland unbekannt)") . " " . ($row["Year"] > 0 ? $row["Year"] : "(Jahr unbekannt)") ?></td>
-						<td rowspan="3"><?php if ($nick != "") { ?><a href="edit_video.php<?php echo session_param($nick, $session, $id); ?>"><img src="img/edit.png"></a><?php } ?></td>
+						<td rowspan="3"><?php if ($session->valid()) { ?><a href="edit_video.php<?php echo $session->param($id); ?>"><img src="img/edit.png"></a><?php } ?></td>
 					</tr>
 					<tr>
 						<td colspan="3" id="spacer_small"></td>
@@ -74,7 +73,7 @@
 								if ($info)
 									echo get_cover_info($coverfile);
 								else
-									echo "<a href='show_video.php" . session_param($nick, $session, $id) . "&info=1'>...</a>";
+									echo "<a href='show_video.php" . $session->param($id) . "&info=1'>...</a>";
 							?>
 						</td>
 					</tr>
@@ -85,7 +84,7 @@
 							<table style="margin-right: 0;">
 								<tr>
 									<td style="width: 40px;">&nbsp;</td>
-									<td><a href="edit_cover.php<?php echo session_param($nick, $session, $id); ?>"><img src="<?php echo $coverfile; ?>"></a></td>
+									<td><a href="edit_cover.php<?php echo $session->param($id); ?>"><img src="<?php echo $coverfile; ?>"></a></td>
 								</tr>
 							</table>
 						</td>

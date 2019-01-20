@@ -9,8 +9,7 @@
 		include_once 'lib/phonetic.php';
 		include_once 'lib/session.php';
 
-		$session = get_php_param("s");
-		$nick = verify_session($session);
+		$session = Session::get();
 
 		$search = get_php_param("search");
 		$con = new Connection();
@@ -44,14 +43,14 @@
 		<tr>
 			<td style="width:  2%;">&nbsp;</td>
 			<td style="width: 49%;">&nbsp;</td>
-			<td style="width: 49%; text-align: right;"><?php echo $nick != "" ? $nick : '<a href="login.php?from=index">Login</a>'; ?></td>
+			<td style="width: 49%; text-align: right;"><?php echo $session->valid() ? $session->nick() : '<a href="login.php?from=index">Login</a>'; ?></td>
 		</tr>
 		<tr>
 			<td colspan="3" style="text-align: center;">
 				<table>
 					<tr>
 						<td style="width: 1050; text-align: center;">
-							<form method="post" action="index.php<?php echo session_param($nick, $session)?>" enctype="multipart/form-data">
+							<form method="post" action="index.php<?php echo $session->param(); ?>" enctype="multipart/form-data">
 								<input type="text" name="search" size="75" style="font-size: 16; background: #DDDDDD; padding: 5;" value="<?php echo $search; ?>"/>
 								&nbsp;&nbsp;
 								<input type="submit" style="font-size: 14; background: white;" value='Suche'/>
@@ -70,7 +69,7 @@
 					<tr>
 						<?php for ($i = 65; $i < 91; $i++) { ?>
 						<td style="width: 30px;">
-							<a href="index.php#<?php echo strtolower(chr($i)); ?>" class="filter"><?php echo chr($i); ?></a>
+							<a href="index.php<?php echo $session->param() . '#' . strtolower(chr($i)) ?>" class="filter"><?php echo chr($i); ?></a>
 						</td>
 						<?php } ?>
 						<td style="width: 30px;">
@@ -150,7 +149,7 @@
 		<?php
 				}
 		?>
-			<td><a href="show_video.php<?php echo session_param($nick, $session, $row["ID"]); ?>"><?php echo $row["Title"]; ?></a></td>
+			<td><a href="show_video.php<?php echo $session->param($row["ID"]); ?>"><?php echo $row["Title"]; ?></a></td>
 		<?php
 				if ($col == 2)
 				{

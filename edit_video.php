@@ -8,8 +8,7 @@
 		include 'lib/videohelpers.php';
 
 		$id = get_php_param("id");
-		$session = get_php_param("s");
-		$nick = verify_session($session);
+		$session = Session::get();
 
 		$con = new Connection();
 		$ps = $con->query(new SelectStatement("Videos", "*, (SELECT Name FROM Genres WHERE ID = Genre) AS GenreName", new Where("ID", $id)));
@@ -19,7 +18,7 @@
 		$ps->close();
 		$con->close();
 
-		$coverfile = get_cover_filename($id, true, $nick);
+		$coverfile = get_cover_filename($id, $session);
 	?>
 
 	<style>
@@ -47,9 +46,9 @@
 		<tr>
 			<td style="width:  2%;">&nbsp;</td>
 			<td style="width: 96%;">
-				<form method="post" action="save_video.php<?php echo session_param($nick, $session, $id); ?>" enctype="multipart/form-data">
+				<form method="post" action="save_video.php<?php echo $session->param($id); ?>" enctype="multipart/form-data">
 				<table> 
-					<?php if ($nick == null) { ?>
+					<?php if (!$session->valid()) { ?>
 					<tr>
 						<td>
 							<a href="show_video.php?id=<?php echo $id; ?>">&lt;</a><br>
@@ -58,12 +57,12 @@
 					</tr>
 					<?php } else { ?>
 					<tr>
-						<td style="width: 15%;"><a href="index.php<?php echo session_param($nick, $session); ?>">&lt;</a></td>
+						<td style="width: 15%;"><a href="index.php<?php echo $session->param(); ?>">&lt;</a></td>
 						<td style="width: 27%;">&nbsp;</td>
 						<td style="width:  2%;">&nbsp;</td>
 						<td style="width: 27%;">&nbsp;</td>
 						<td style="width:  2%;">&nbsp;</td>
-						<td style="width: 27%;text-align: right;"><?php echo $nick; ?></td>
+						<td style="width: 27%;text-align: right;"><?php echo $session->nick(); ?></td>
 					</tr>
 					<tr>
 						<td id="title_large">Titel</td>

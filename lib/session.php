@@ -2,71 +2,105 @@
 
 include_once 'db/dbconnect.php';
 
-function get_session($nick, $pass)
+class Session
 {
-	if ($pass == "")
+	private $session;
+	private $nick;
+
+	private function __construct($session)
 	{
-		debug_out("Password empty.");
-		return null;
+		$this->nick = Session::verify($session);
+		$this->session = $this->nick != "" ? $session : null;
 	}
 
-	$session = null;
-	$con = new Connection();
-	$hash = md5($pass, false);
-
-	$where = new Where("Name", $nick);
-	$where->sub_where(new Where("Pwd", $pass, "OR", "Pwd", $hash));
-	$id = $con->value(new SelectStatement("Users", "ID", $where));
-
-	if ($id != "")
+	public static function get()
 	{
-		$session = 0;
-		while ($session == 0 or $con->value(new SelectStatement("Users", "count(*)", new Where("Session", $session))) > 0)
-			$session = mt_rand(100000, 999999);
-
-		$stmt = new UpdateStatement("Users");
-		$stmt->add_value("Login", "now()", true);
-		$stmt->add_value("Session", $session);
-		$stmt->set_where(new Where("ID", $id));
-		$con->execute($stmt);
-	}
-	else
-	{
-		debug_out("Wrong user nickname or password.");
+		return new Session(get_php_param("s"));
 	}
 
-	$con->close();
-	return $session;
-}
-
-function verify_session($session)
-{
-	$nick = null;
-
-	if (intval($session) > 0)
+	public static function login()
 	{
-		$con = new Connection();
-		$ps = $con->query(new SelectStatement("Users", "*", new Where("Session", $session)));
-		$result = $ps->get_result();
+		$nick = get_http_param("nick");
+		$pass = get_http_param("pass");
 
-		if (($row = $result->fetch_assoc()) != null)
+		if ($nick == "" or $pass == "")
 		{
-			$time = $row["Login"];
-			debug_out("Verify session of user " . $row["ID"] . ". Last login = " . $time);
-			$nick = $row["Name"];
+			debug_out("User or password empty.");
+			return new Session(null);
 		}
 
-		$result->close();
-		$ps->close();
+		$session = 0;
+		$con = new Connection();
+		$hash = md5($pass, false);
+
+		$where = new Where("Name", $nick);
+		$where->sub_where(new Where("Pwd", $pass, "OR", "Pwd", $hash));
+		$id = $con->value(new SelectStatement("Users", "ID", $where));
+
+		if ($id != "")
+		{
+			while ($session == 0 or $con->value(new SelectStatement("Users", "count(*)", new Where("Session", $session))) > 0)
+				$session = mt_rand(100000, 999999);
+
+			$stmt = new UpdateStatement("Users");
+			$stmt->add_value("Login", "now()", true);
+			$stmt->add_value("Session", $session);
+			$stmt->set_where(new Where("ID", $id));
+			$con->execute($stmt);
+		}
+		else
+		{
+			debug_out("Wrong user nickname or password.");
+		}
+
 		$con->close();
+		return new Session($session);
 	}
 
-	return $nick;
-}
+	public static function verify($session)
+	{
+		$nick = null;
 
-function session_param($nick, $session, $id = 0)
-{
-	return "?s=" . ($nick != null ? intval($session) : 0) . ($id != 0 ? "&id=" . $id : ""); 
+		if (intval($session) > 0)
+		{
+			$con = new Connection();
+			$ps = $con->query(new SelectStatement("Users", "*", new Where("Session", $session)));
+			$result = $ps->get_result();
+
+			if (($row = $result->fetch_assoc()) != null)
+			{
+				$time = $row["Login"];
+				$nick = $row["Name"];
+				debug_out("Verify session of user " . $row["ID"] . " ($nick). Last login = $time");
+			}
+
+			$result->close();
+			$ps->close();
+			$con->close();
+		}
+
+		return $nick;
+	}
+
+	public static function session_param($session_id)
+	{
+		return "?s=" . ($session_id == "" ? "0" : $session_id);
+	}
+
+	public function valid()
+	{
+		return intval($this->session) != 0;
+	}
+
+	public function param($id = 0)
+	{
+		return Session::session_param($this->session) . ($id != 0 ? "&id=" . $id : ""); 
+	}
+
+	public function nick()
+	{
+		return $this->nick;
+	}
 }
 
 ?>

@@ -21,10 +21,8 @@
 		include_once 'lib/videohelpers.php';
 
 		$id = get_http_param("id");
-		$session = get_php_param("s");
-		$nick = verify_session($session);
-
-		$coverfile = get_cover_filename($id, true, $nick);
+		$session = Session::get();
+		$coverfile = get_cover_filename($id, $session);
 	?>
 
 	<style>
@@ -35,7 +33,7 @@
 </head>
 <body>
 	<table style="text-align: center;">
-		<?php if ($nick == null) { ?>
+		<?php if (!$session->valid()) { ?>
 		<tr>
 			<td>
 				<a href="show_video.php?id=<?php echo $id; ?>">&lt;</a><br>
@@ -45,7 +43,7 @@
 		<?php } else { ?>
 		<tr>
 			<td>
-				<a href="show_video.php<?php echo session_param($nick, $session, $id); ?>">&lt;</a><br>
+				<a href="show_video.php<?php echo $session->param($id); ?>">&lt;</a><br>
 				<img src="<?php echo $coverfile; ?>">
 			</td>
 		</tr>
@@ -54,7 +52,7 @@
 		</tr>
 		<tr>
 			<td>
-				<form method="post" action="save_cover.php<?php echo session_param($nick, $session, $id); ?>" enctype="multipart/form-data">
+				<form method="post" action="save_cover.php<?php echo $session->param($id); ?>" enctype="multipart/form-data">
 					<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo get_php_param('cover_max_filesize'); ?>" />
 					<input type="file" accept="image/jpeg" name="image" id="image" />
 					<input type="submit" value='Speichern' onclick="return validateForm()"/>

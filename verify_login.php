@@ -1,24 +1,18 @@
 <?php
 
+include_once 'lib/tools.php';
 include_once 'lib/session.php';
 include_once 'lib/videohelpers.php';
 
+
 $from = get_http_param("from");
-$nick = get_http_param("nick");
-$pass = get_http_param("pass");
-$session = get_session($nick, $pass);
+$session = Session::login();
 
 if ($from == "")
 	$from = "index";
 
-if ($session != "")
+if ($session->valid())
 {
-	$params = explode(";", $from);
-	$forward = $params[0] . ".php?session=" . $session;
-
-	for ($i = 1; count($params) > $i + 1; $i += 2)
-		$forward .= "&" . $params[$i] . "=" . $params[$i + 1];
-
 	forward(get_forward_page($from, $session));
 }
 else
