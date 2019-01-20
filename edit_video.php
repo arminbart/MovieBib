@@ -182,8 +182,8 @@
 							<input type="text" name="othertitle<?php echo $i; ?>" style="width: 100%" <?php echo (sizeof($othertitles) > $i ? ' value="' . trim($othertitles[$i]) . '"' : ''); ?>><br>
 							<?php } ?>
 						</td>
-						<td rowspan="11">&nbsp;</td>
-						<td rowspan="11" style="vertical-align:top;">
+						<td rowspan="12">&nbsp;</td>
+						<td rowspan="12" style="vertical-align:top;">
 							<img style="float: right;" src="<?php echo $coverfile; ?>">
 						</td>
 					</tr>
@@ -245,6 +245,15 @@
 					<tr>
 						<td id="title_small">Trailer</td>
 						<td colspan="3"><input type="text" name="trailer" style="width: 100%;" value="<?php echo $row['Trailer'];?>"></td>
+					</tr>
+					<tr>
+						<td id="title_small">Cover</td>
+						<td><?php echo $coverfile;?></td>
+						<td></td>
+						<td>
+							<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo get_php_param('cover_max_filesize'); ?>" />
+							<input type="file" accept="image/jpeg" name="image" id="image"/>
+						</td>
 					</tr>
 					<tr>
 						<td colspan="4" id="spacer_large"></td>

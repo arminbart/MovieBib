@@ -25,6 +25,57 @@ function get_cover_info($filename)
 	return $w . " x " . $h;
 }
 
+function process_cover($id, $tmpname)
+{
+	$filename = get_cover_filename($id);
+
+	move_uploaded_file($tmpname, $filename);
+
+	list($w, $h) = getimagesize($filename);
+
+	$maxw = get_php_param("cover_max_width");
+	$maxh = get_php_param("cover_max_height");
+
+	if ($w > $maxw or $h > $maxh)
+	{
+		$oldimg = imagecreatefromjpeg($filename);
+		$newimg = $oldimg;
+
+		if ($w > $maxw and $h > $maxh)
+		{ // Width and Height too large -> Zoom
+			$factorw = $w / $maxw;
+			$factorh = $h / $maxh;
+			$factor = $factorw < $factorh ? $factorh : $factorw;
+			$neww = intval($w / $factor + 0.01);
+			$newh = intval($h / $factor + 0.01);
+
+			$newimg = imagecreatetruecolor($neww, $newh);
+			imagecopyresampled($newimg, $oldimg, 0, 0, 0, 0, $neww, $newh, $w, $h);
+			imagedestroy($oldimg);
+			$oldimg = $newimg;
+
+			$w = $neww;
+			$h = $newh;
+		}
+/*
+		if ($w > $maxw or $h > $maxh)
+		{ // Width or Height (still) too large -> Crop
+			$offsetx = $neww > $maxw ? ($neww - $maxw) / 2 : 0;
+			$offsety = $newh > $maxh ? ($newh - $maxh) / 2 : 0;
+			$newimg = imagecrop($oldimg, array('x' => $offsetx, 'y' => $offsety, 'width' => min($w, $maxw), 'height' => min($h, $maxh)));
+			imagedestroy($oldimg);
+
+			echo "<br>offset " . $offsetx . " x " . $offsety;
+			echo "<br>range " . min($neww, $maxw) . " x " . min($newh, $maxh);
+		}
+*/
+		imageconvolution($newimg, array(array(-1, -1, -1), array(-1, 16, -1), array(-1, -1, -1)), 8, 0); // Sharpen image
+		imagejpeg($newimg, $filename);
+
+		imagedestroy($newimg);
+	}
+}
+
 function get_forward_page($from, $session = 0)
 {
 	$params = explode(";", $from);

@@ -9,6 +9,8 @@ $id = get_http_param("id");
 $session = get_http_param("s");
 $nick = verify_session($session);
 
+$tmpname = $_FILES['image']['tmp_name'];
+
 if ($nick == null)
 {
 	forward("login.php");
@@ -48,7 +50,10 @@ else
 		$video->debug_dump();
 	$video->save();
 
-	forward("show_video.php" . session_param($nick, $session, $id));
+	if ($tmpname != "")
+		process_cover($id, $tmpname);
+
+	forward("show_video.php" . session_param($nick, $session, $id) . "&no_cache=1");
 }
 
 
