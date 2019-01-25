@@ -6,12 +6,12 @@
 
 	<?php
 		include_once 'db/dbconnect.php';
+		include_once 'lib/filter.php';
 		include_once 'lib/phonetic.php';
 		include_once 'lib/session.php';
 
 		$session = Session::get();
-
-		$search = get_php_param("search");
+		$filter = Filter::get();
 		$con = new Connection();
 	?>
 
@@ -32,6 +32,15 @@
 		a.filter:active {
 			color: #440000;
 		} /* selected link */
+
+		#spacer {
+			font-face: arial;
+			color: #666666;
+		}
+
+		#selected {
+			color: #880000;
+		}
 	</style>
 </head>
 <body>
@@ -50,8 +59,8 @@
 				<table>
 					<tr>
 						<td style="width: 1050; text-align: center;">
-							<form method="post" action="index.php<?php echo $session->param(); ?>" enctype="multipart/form-data">
-								<input type="text" name="search" size="75" style="font-size: 16; background: #DDDDDD; padding: 5;" value="<?php echo $search; ?>"/>
+							<form method="post" action="index.php<?php echo $session->param() . $filter->param("search", null); ?>" enctype="multipart/form-data">
+								<input type="text" name="search" size="75" style="font-size: 16; background: #DDDDDD; padding: 5;" value="<?php echo $filter->search; ?>"/>
 								&nbsp;&nbsp;
 								<input type="submit" style="font-size: 14; background: white;" value='Suche'/>
 							</form>
@@ -69,7 +78,7 @@
 					<tr>
 						<?php for ($i = 65; $i < 91; $i++) { ?>
 						<td style="width: 30px;">
-							<a href="index.php<?php echo $session->param() . '#' . strtolower(chr($i)) ?>" class="filter"><?php echo chr($i); ?></a>
+							<a href="index.php<?php echo $session->param() . $filter->param() . '#' . strtolower(chr($i)) ?>" class="filter"><?php echo chr($i); ?></a>
 						</td>
 						<?php } ?>
 						<td style="width: 30px;">
@@ -83,7 +92,7 @@
 			<td colspan="3" id="spacer_medium"></td>
 		</tr>
 		<tr>
-			<td colspan="3" id="title_small" style="font-size: 14; text-align: justify;">
+			<td colspan="3" id="title_small" style="text-align: justify;">
 			<?php
 				$stmt = new SelectStatement("Genres", "*", null, "Name");
 				$ps = $con->query($stmt);
@@ -95,9 +104,17 @@
 					if ($first)
 						$first = false;
 					else
-						echo '<font face="arial" color="#666666"> | </font>';
-					echo $row["Name"];
+						echo '<font id="spacer"> | </font>';
+
+					if ($filter->is_set("genre", $row["ID"]))
+						echo "<font id='selected'>" . $row["Name"] . "</font>";
+					else
+						echo "<a href='index.php" . $session->param() . $filter->param("genre", $row["ID"]) . "' class='filter'>" . $row["Name"] . "</a>";
 				}
+
+				if ($filter->is_set("genre"))
+					echo "<a href='index.php" . $session->param() . $filter->param("genre", null) . "'>&nbsp;<img src='img/cancel.png' style='vertical-align: middle;'></a>";
+
 				$result->close();
 				$ps->close();
 			?>
@@ -107,14 +124,7 @@
 			<td colspan="3" id="spacer_medium"></td>
 		</tr>
 		<?php
-			$where = null;
-			if ($search != "")
-			{
-				$where = new Where(null, null, "OR");
-				$where->sub_where("Title LIKE '%" . str_replace("'", "''", $search) . "%' ");
-				$where->sub_where("Phonetic LIKE '%" . phonetic($search) . "%' ");
-			}
-			$ps = $con->query(new SelectStatement("Videos", "*", $where, "CASE WHEN strcmp(Title, 'A') >= 0 AND strcmp(Title, 'ZZZ') <= 0 THEN 0 ELSE 1 END, Title"));
+			$ps = $con->query(new SelectStatement("Videos", "*", $filter->where(), "CASE WHEN strcmp(Title, 'A') >= 0 AND strcmp(Title, 'ZZZ') <= 0 THEN 0 ELSE 1 END, Title"));
 			$result = $ps->get_result();
 			$letter = "";
 			$col = 1;

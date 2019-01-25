@@ -84,7 +84,7 @@ class UpdateStatement extends Statement
 		}
 
 		$sql .= $valstr;
-		if ($this->where != null)
+		if ($this->where != null and !$this->where->is_empty())
 			$sql .= " WHERE " . $this->where->sql($debug);
 
 		return $sql;
@@ -109,7 +109,7 @@ class SelectStatement extends Statement
 	{
 		$sql = "SELECT $this->cols FROM $this->table";
 
-		if ($this->where != null)
+		if ($this->where != null and !$this->where->is_empty())
 			$sql .= " WHERE " . $this->where->sql($debug);
 
 		if ($this->order != "")
@@ -165,12 +165,20 @@ class Where
 
 		foreach ($this->wheres as $where)
 		{
+			if ($where instanceof Where and $where->is_empty())
+				continue;
+
 			if ($sql != "")
 				$sql .= " $this->operator ";
 			$sql .= "(" . ($where instanceof Where ? $where->sql($debug) : $where) . ")";
 		}
 
 		return $sql;
+	}
+
+	public function is_empty()
+	{
+		return sizeof($this->params) + sizeof($this->wheres) == 0;
 	}
 
 	public function bind($ps)
