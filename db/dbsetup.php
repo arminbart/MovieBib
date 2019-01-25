@@ -124,7 +124,10 @@ function init_data($con)
 
 function check_entry($con, $line)
 {
-	if (!preg_match("/INSERT INTO [a-zA-Z]+ \([a-zA-Z]+(, ?[a-zA-Z]+)*\) VALUES \('[a-zA-Z\-]+'(, ?'[a-zA-Z\-]+')*\)/", $line))
+	$NAME_P = "[a-zA-Z]+";
+	$VALUE_P = "[a-zA-Z\-\.]+";
+
+	if (!preg_match("/INSERT INTO $NAME_P \($NAME_P(, ?$NAME_P)*\) VALUES \('$VALUE_P'(, ?'$VALUE_P')*\)/", $line))
 		exit("Invalid INSERT syntax: " . $line);
 
 	$values = explode("VALUES", substr($line, strlen("INSERT INTO") + 1));

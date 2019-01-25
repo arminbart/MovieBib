@@ -17,3 +17,6 @@ INSERT INTO Genres (ID, Name) VALUES ('Romantik', 'Romantik')
 INSERT INTO Genres (ID, Name) VALUES ('SciFi', 'Science-Fiction')
 INSERT INTO Genres (ID, Name) VALUES ('Thriller', 'Thriller')
 INSERT INTO Genres (ID, Name) VALUES ('Western', 'Western')
+
+INSERT INTO Languages (ID, Name, ShortName) VALUES ('de', 'deutsch', 'dt.')
+INSERT INTO Languages (ID, Name, ShortName) VALUES ('en', 'englisch', 'en.')

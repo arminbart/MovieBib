@@ -15,6 +15,8 @@
 		$ps = $con->query(new SelectStatement("Videos", "*, (SELECT Name FROM Genres WHERE ID = Genre) AS GenreName", new Where("ID", $id)));
 		$result = $ps->get_result();
 		$row = $result->fetch_assoc();
+		$result->close();
+		$ps->close();
 
 		$coverfile = get_cover_filename($id, $session);
 	?>
@@ -177,7 +179,5 @@
 </html>
 
 <?php
-	$result->close();
-	$ps->close();
 	$con->close();
 ?>

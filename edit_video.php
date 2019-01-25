@@ -16,7 +16,6 @@
 		$row = $result->fetch_assoc();
 		$result->close();
 		$ps->close();
-		$con->close();
 
 		$coverfile = get_cover_filename($id, $session);
 	?>
@@ -69,8 +68,14 @@
 						<td colspan="3"><input type="text" name="title" style="width: 100%" value="<?php echo $row['Title'];?>"></td>
 						<td></td>
 						<td>
-							<input type="radio" name="lang" value="de" <?php echo get_checked($row['Lang'], 'de'); ?>>&nbsp;[dt.]
-							<input type="radio" name="lang" value="en" <?php echo get_checked($row['Lang'], 'en'); ?>>&nbsp;[en.]
+							<?php
+								$ps = $con->query(new SelectStatement("Languages", "*", null, "ShortName"));
+								$result = $ps->get_result();
+								while (($row2 = $result->fetch_assoc()) != null)
+									echo "<input type='radio' name='lang' value='" . $row2["ID"] . "' " . get_checked($row["Lang"], $row2["ID"]) . ">&nbsp;[" . $row2["ShortName"] . "]";
+								$result->close();
+								$ps->close();
+							?>
 						</td>
 					</tr>
 					<tr>
@@ -328,3 +333,7 @@
 	</table>
 </body>
 </html>
+
+<?php
+	$con->close();
+?>

@@ -27,7 +27,7 @@ else
 	$video->country = get_http_param("country");
 	$video->genre = get_http_param("genre");
 	$video->othergenres = get_concat_param("othergenre", 18);
-	$video->lang = get_http_param("lang");
+	$video->lang = new Language(get_http_param("lang"));
 	$video->year = intval(get_http_param("year")) > 0 ? intval(get_http_param("year")) : null;
 	$video->duration = intval(get_http_param("duration")) > 0 ? intval(get_http_param("duration")) : null;
 	$video->medium = get_medium(get_http_param("medium"), get_http_param("file"));

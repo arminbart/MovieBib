@@ -3,6 +3,35 @@
 include_once 'db/dbstatements.php';
 include_once 'lib/phonetic.php';
 
+class Language
+{
+	public $id;
+	public $name;
+	public $short;
+
+	public function __construct($id, $con = null)
+	{
+		$this->id = $id;
+		$this->name = $id . "???";
+		$this->short = $id . ".";
+
+		if ($con != null)
+		{
+			$ps = $con->query(new SelectStatement("Languages", "*", new Where("ID", $id)));
+			$result = $ps->get_result();
+			if (($row = $result->fetch_assoc()) != null)
+			{
+				$this->name = $row["Name"];
+				$this->short = $row["ShortName"];
+			}
+			else
+				debug_out("Unknown language '$id'!");
+			$result->close();
+			$ps->close();
+		}
+	}
+}
+
 class Video
 { //      [Status]              [set by MovieButler] [set by MovieBib]
 	const enlisted		= 0; //			X
@@ -34,7 +63,7 @@ class Video
 	public $country;		// VARCHAR(16)
 	public $genre;			// VARCHAR(16)
 	public $othergenres;	// TEXT
-	public $lang;			// CHAR(2)
+	public $lang;			// CHAR(2) -> class Language
 	public $year;			// INT(4)
 	public $duration;		// INT(4)
 	public $medium;			// VARCHAR(16)
@@ -60,6 +89,7 @@ class Video
 	function load()
 	{
 		$con = new Connection();
+
 		$ps = $con->query(new SelectStatement("Genres", "ID, Name", null, "ID"));
 		$result = $ps->get_result();
 		while (($row = $result->fetch_assoc()) != null)
@@ -91,7 +121,7 @@ class Video
 			$this->country		= $row["Country"];
 			$this->genre		= $row["Genre"];
 			$this->othergenres	= $row["OtherGenres"];
-			$this->lang			= $row["Lang"];
+			$lang				= $row["Lang"];
 			$this->year			= intval($row["Year"]) > 0 ? intval($row["Year"]) : null;
 			$this->duration		= intval($row["Duration"]) > 0 ? intval($row["Duration"]) : null;
 			$this->medium		= $row["Medium"];
@@ -110,6 +140,9 @@ class Video
 		}
 		$result->close();
 		$ps->close();
+
+		$this->lang = new Language($lang, $con);
+
 		$con->close();
 	}
 
@@ -128,7 +161,7 @@ class Video
 		$stmt->add_value("Country",			$this->country);
 		$stmt->add_value("Genre",			$this->genre);
 		$stmt->add_value("OtherGenres",		$this->othergenres);
-		$stmt->add_value("Lang",			$this->lang);
+		$stmt->add_value("Lang",			$this->lang->id);
 		$stmt->add_value("Year",			$this->year);
 		$stmt->add_value("Duration",		$this->duration);
 		$stmt->add_value("Medium",			$this->medium);
@@ -199,7 +232,7 @@ class Video
 			debug_out("Country: "		. $this->country);		// VARCHAR(16)
 			debug_out("Genre: "			. $this->genre);		// VARCHAR(16)
 			debug_out("OtherGenres: "	. $this->othergenres);	// TEXT
-			debug_out("Lang: "			. $this->lang);			// CHAR(2)
+			debug_out("Lang: "			. $this->lang->id);		// CHAR(2)
 			debug_out("Year: "			. $this->year);			// INT(4)
 			debug_out("Duration: "		. $this->duration);		// INT(4)
 			debug_out("Medium: "		. $this->medium);		// VARCHAR(16)
