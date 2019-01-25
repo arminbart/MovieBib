@@ -123,6 +123,35 @@
 		<tr>
 			<td colspan="3" id="spacer_medium"></td>
 		</tr>
+		<tr>
+			<td colspan="3" id="title_small">
+				<?php
+					$stmt = new SelectStatement("Languages", "*", null, "ShortName");
+					$ps = $con->query($stmt);
+					$result = $ps->get_result();;
+					$first = true;
+
+					while (($row = $result->fetch_assoc()) != null)
+					{
+						if ($first)
+							$first = false;
+						else
+							echo '<font id="spacer"> | </font>';
+
+						if ($filter->is_set("lang", $row["ID"]))
+							echo "<font id='selected'>" . $row["Name"] . "</font>";
+						else
+							echo "<a href='index.php" . $session->param() . $filter->param("lang", $row["ID"]) . "' class='filter'>" . $row["Name"] . "</a>";
+					}
+
+					if ($filter->is_set("lang"))
+						echo "<a href='index.php" . $session->param() . $filter->param("lang", null) . "'>&nbsp;<img src='img/cancel.png' style='vertical-align: middle;'></a>";
+
+					$result->close();
+					$ps->close();
+				?>
+			</td>
+		</tr>
 		<?php
 			$ps = $con->query(new SelectStatement("Videos", "*", $filter->where(), "CASE WHEN strcmp(Title, 'A') >= 0 AND strcmp(Title, 'ZZZ') <= 0 THEN 0 ELSE 1 END, Title"));
 			$result = $ps->get_result();

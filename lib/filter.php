@@ -6,6 +6,7 @@ class Filter
 {
 	public $search = null;
 	public $genre = null;
+	public $lang = null;
 
 
 	private function __construct()
@@ -18,18 +19,24 @@ class Filter
 
 		$filter->search = get_http_param("search");
 		$filter->genre = get_http_param("genre");
-		
+		$filter->lang = get_http_param("lang");
+
 		return $filter;
 	}
 
 	public function is_set($name, $value = null)
 	{
-		if ($name == "search")
-			return Filter::test_param($this->search, $value);
-		if ($name == "genre")
-			return Filter::test_param($this->genre, $value);
-
-		exit("Unknown filter type '$name'!");
+		switch ($name)
+		{
+			case "search":
+				return Filter::test_param($this->search, $value);
+			case "genre":
+				return Filter::test_param($this->genre, $value);
+			case "lang":
+				return Filter::test_param($this->lang, $value);
+			default:
+				exit("Unknown filter type '$name'!");
+		}
 	}
 
 	public function param($add_name = null, $add_value = null)
@@ -38,6 +45,7 @@ class Filter
 
 		$param .= Filter::filter_param("search", $this->search, $add_name, $add_value);
 		$param .= Filter::filter_param("genre", $this->genre, $add_name, $add_value);
+		$param .= Filter::filter_param("lang", $this->lang, $add_name, $add_value);
 
 		return $param;
 	}
@@ -47,6 +55,7 @@ class Filter
 		$where = new Where();
 
 		Filter::add_where_part($where, "Genre", $this->genre);
+		Filter::add_where_part($where, "Lang", $this->lang);
 
 		if ($this->search != "")
 		{
