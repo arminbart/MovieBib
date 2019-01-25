@@ -9,7 +9,7 @@
 
 		$id = get_php_param("id");
 		$session = Session::get();
-		$info = bool_php_param("info");
+		$details = (bool_php_param("detalis") and $session->valid());
 
 		$con = new Connection();
 		$ps = $con->query(new SelectStatement("Videos", "*, (SELECT Name FROM Genres WHERE ID = Genre) AS GenreName", new Where("ID", $id)));
@@ -70,10 +70,10 @@
 					<tr>
 						<td colspan="4" id="spacer_medium" style="text-align: right; font-size: 18;">
 							<?php
-								if ($info)
+								if ($details)
 									echo get_cover_info($coverfile);
-								else
-									echo "<a href='show_video.php" . $session->param($id) . "&info=1'>...</a>";
+								else if ($session->valid())
+									echo "<a href='show_video.php" . $session->param($id) . "&detalis=1'>...</a>";
 							?>
 						</td>
 					</tr>
@@ -120,7 +120,7 @@
 						<td colspan="2" id="title_small">Dateiname</td>
 						<td colspan="1"><?php echo $row["File"]; ?></td>
 					</tr>
-					<?php if ($info) { ?>
+					<?php if ($details) { ?>
 					<tr>
 						<td colspan="2" id="title_small">urspr. Dateiname</td>
 						<td colspan="1"><?php echo $row["OrigFile"]; ?></td>
