@@ -135,6 +135,10 @@
 						<td colspan="2" id="title_small">Phonetischer Code</td>
 						<td colspan="1"><?php echo $row["Phonetic"]; ?></td>
 					</tr>
+					<tr>
+						<td colspan="2" id="title_small">Status</td>
+						<td colspan="1"><?php echo $row["Status"]; ?></td>
+					</tr>
 					<?php } ?>
 					<tr>
 						<td colspan="3" id="spacer_large"></td>
