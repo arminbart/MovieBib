@@ -121,35 +121,74 @@
 			</td>
 		</tr>
 		<tr>
-			<td colspan="3" id="spacer_medium"></td>
+			<td colspan="3" id="spacer_medium"><a href="index.php<?php echo $session->param() . $filter->param("special", $filter->special() ? null : 1); ?>"><img src="img/<?php echo $filter->special() ? "up" : "down"; ?>.png" style="float: right;"></a></td>
 		</tr>
 		<tr>
 			<td colspan="3" id="title_small">
-				<?php
-					$stmt = new SelectStatement("Languages", "*", null, "ShortName");
-					$ps = $con->query($stmt);
-					$result = $ps->get_result();;
-					$first = true;
+				<table id="title_small" style="width: 100%;">
+					<tr>
+						<td style="text-align: left;">
+							<?php
+								$stmt = new SelectStatement("Languages", "*", null, "ShortName");
+								$ps = $con->query($stmt);
+								$result = $ps->get_result();;
+								$first = true;
 
-					while (($row = $result->fetch_assoc()) != null)
-					{
-						if ($first)
-							$first = false;
-						else
-							echo '<font id="spacer"> | </font>';
+								while (($row = $result->fetch_assoc()) != null)
+								{
+									if ($first)
+										$first = false;
+									else
+										echo '<font id="spacer"> | </font>';
 
-						if ($filter->is_set("lang", $row["ID"]))
-							echo "<font id='selected'>" . $row["Name"] . "</font>";
-						else
-							echo "<a href='index.php" . $session->param() . $filter->param("lang", $row["ID"]) . "' class='filter'>" . $row["Name"] . "</a>";
-					}
+									if ($filter->is_set("lang", $row["ID"]))
+										echo "<font id='selected'>" . $row["Name"] . "</font>";
+									else
+										echo "<a href='index.php" . $session->param() . $filter->param("lang", $row["ID"]) . "' class='filter'>" . $row["Name"] . "</a>";
+								}
 
-					if ($filter->is_set("lang"))
-						echo "<a href='index.php" . $session->param() . $filter->param("lang", null) . "'>&nbsp;<img src='img/cancel.png' style='vertical-align: middle;'></a>";
+								if ($filter->is_set("lang"))
+									echo "<a href='index.php" . $session->param() . $filter->param("lang", null) . "'>&nbsp;<img src='img/cancel.png' style='vertical-align: middle;'></a>";
 
-					$result->close();
-					$ps->close();
-				?>
+								$result->close();
+								$ps->close();
+							?>
+						</td>
+						<td style="text-align: right;">
+							<?php
+								$type = null;
+								if ($filter->special())
+								{
+									$special_filters = array("medium,Datei,File", "medium,Blu-ray,BR", "medium,DVD", "medium,VHS", "res,HD", "status,neu erfasst,0", "status,teilweise erfasst,1-8", "status,vollst&auml;ndig erfasst,9");
+									foreach ($special_filters as $sf)
+									{
+										$sf2 = explode(",", $sf);
+
+										if ($sf2[0] == $type)
+										{
+											echo "<font id='spacer'> | </font>";
+										}
+										else if ($type !== null)
+										{
+											if ($filter->is_set($type))
+												echo "<a href='index.php" . $session->param() . $filter->param($type, null) . "'>&nbsp;<img src='img/cancel.png' style='vertical-align: middle;'></a>";							
+											echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+										}
+										$type = $sf2[0];
+
+										if ($filter->is_set($sf2[0], $sf2[sizeof($sf2) - 1]))
+											echo "<font id='selected'>" . $sf2[1] . "</font>";
+										else
+											echo "<a href='index.php" . $session->param() . $filter->param($sf2[0], $sf2[sizeof($sf2) - 1]) . "' class='filter'>" . $sf2[1] . "</a>";
+									}
+
+									if ($filter->is_set($type))
+										echo "<a href='index.php" . $session->param() . $filter->param($type, null) . "'>&nbsp;<img src='img/cancel.png' style='vertical-align: middle;'></a>";							
+								}
+							?>
+						</td>
+					</tr>
+				</table>
 			</td>
 		</tr>
 		<?php
