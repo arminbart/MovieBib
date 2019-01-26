@@ -75,7 +75,7 @@ class Filter
 			$param .= Filter::filter_param("status", $this->status, $add_name, $add_value);
 		}
 
-		$param .= Filter::filter_param("special", $add_name == "special" ? $add_value : 1, null, null);
+		$param .= Filter::filter_param("special", $add_name == "special" ? $add_value : (in_array($add_name, array("medium", "res", "status")) or $this->special() ? 1 : null), null, null);
 
 		return $param;
 	}
