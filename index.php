@@ -114,6 +114,8 @@
 
 				if ($filter->is_set("genre"))
 					echo "<a href='index.php" . $session->param() . $filter->param("genre", null) . "'>&nbsp;<img src='img/cancel.png' style='vertical-align: middle;'></a>";
+				else
+					echo "<img src='img/cancel_invisible.png'>";
 
 				$result->close();
 				$ps->close();
@@ -171,7 +173,9 @@
 										else if ($type !== null)
 										{
 											if ($filter->is_set($type))
-												echo "<a href='index.php" . $session->param() . $filter->param($type, null) . "'>&nbsp;<img src='img/cancel.png' style='vertical-align: middle;'></a>";							
+												echo "<a href='index.php" . $session->param() . $filter->param($type, null) . "'>&nbsp;<img src='img/cancel.png' style='vertical-align: middle;'></a>";
+											else
+												echo "<img src='img/cancel_invisible.png'>";
 											echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 										}
 										$type = $sf2[0];
@@ -183,7 +187,9 @@
 									}
 
 									if ($filter->is_set($type))
-										echo "<a href='index.php" . $session->param() . $filter->param($type, null) . "'>&nbsp;<img src='img/cancel.png' style='vertical-align: middle;'></a>";							
+										echo "<a href='index.php" . $session->param() . $filter->param($type, null) . "'>&nbsp;<img src='img/cancel.png' style='vertical-align: middle;'></a>";
+									else
+										echo "<img src='img/cancel_invisible.png'>";
 								}
 							?>
 						</td>
