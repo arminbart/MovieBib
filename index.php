@@ -202,9 +202,11 @@
 			$result = $ps->get_result();
 			$letter = "";
 			$col = 1;
+			$cnt = 0;
 
 			while (($row = $result->fetch_assoc()) != null)
 			{
+				$cnt += 1;
 				$title = $row["Title"];
 				if (strtoupper(substr($title, 0, 1)) != $letter)
 				{
@@ -251,6 +253,12 @@
 			$result->close();
 			$ps->close();
 		?>
+		<tr>
+			<td colspan="3" id="spacer_medium"></td>
+		</tr>
+		<tr>
+			<td colspan="3" id="title_small" style="text-align: right;"><?php echo $cnt . " Videos"; ?></td>
+		</tr>
 	</table>
 </td>
 <td style="width:  2%"></td>
