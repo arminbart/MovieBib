@@ -89,9 +89,19 @@ class Filter
 
 		if ($this->search != "")
 		{
+			$words = explode(" ", $this->search);
 			$subwhere = new Where(null, null, "OR");
-			$subwhere->sub_where("Title LIKE '%" . str_replace("'", "''", $this->search) . "%' ");
-			$subwhere->sub_where("Phonetic LIKE '%" . phonetic($this->search) . "%' ");
+			$where_title = new Where(null, null, "AND");
+			$where_phonetic = new Where(null, null, "AND");
+
+			foreach ($words as $word)
+			{
+				$where_title->sub_where("CONCAT(' ', Title, ' ') LIKE '% " . str_replace("'", "''", $word) . " %'");
+				$where_phonetic->sub_where("Phonetic LIKE '%" . phonetic($word) . "%'");
+			}
+
+			$subwhere->sub_where($where_title);
+			$subwhere->sub_where($where_phonetic);
 			$where->sub_where($subwhere);
 		}
 
